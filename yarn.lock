@@ -1022,10 +1022,10 @@ bitcoinjs-message@^2.1.0:
     blake2b-wasm "https://github.com/BitGo/blake2b-wasm#193cdb71656c1a6c7f89b05d0327bb9b758d071b"
     nanoassert "^1.0.0"
 
-"blake2b@https://github.com/michaeltout/blake2b.git":
+"blake2b@git+https://github.com/michaeltout/blake2b.git":
   version "2.1.3"
   uid "777f844b986173d08fc27fe9547c6f6320a82d62"
-  resolved "https://github.com/michaeltout/blake2b.git#777f844b986173d08fc27fe9547c6f6320a82d62"
+  resolved "git+https://github.com/michaeltout/blake2b.git#777f844b986173d08fc27fe9547c6f6320a82d62"
   dependencies:
     blake2b-wasm "https://github.com/BitGo/blake2b-wasm#193cdb71656c1a6c7f89b05d0327bb9b758d071b"
     nanoassert "^1.0.0"
@@ -1664,9 +1664,9 @@ create-hash@^1.1.0, create-hash@^1.1.2, create-hash@^1.2.0:
     ripemd160 "^2.0.1"
     sha.js "^2.4.0"
 
-"create-hash@git://github.com/pbca26/createHash#electron-v4":
+"create-hash@git://github.com/pbca26/createHash.git#electron-v4":
   version "1.2.0"
-  resolved "git://github.com/pbca26/createHash#91bf03096f618d4c146e0fe40365b3bbfd95bc4b"
+  resolved "git://github.com/pbca26/createHash.git#91bf03096f618d4c146e0fe40365b3bbfd95bc4b"
   dependencies:
     cipher-base "^1.0.1"
     inherits "^2.0.1"
@@ -2049,10 +2049,10 @@ electron-rebuild@^1.11.0:
     spawn-rx "^3.0.0"
     yargs "^14.2.0"
 
-electron@^11.3.0:
-  version "11.3.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-11.3.0.tgz#87e8528fd23ae53b0eeb3a738f1fe0a3ad27c2db"
-  integrity sha512-MhdS0gok3wZBTscLBbYrOhLaQybCSAfkupazbK1dMP5c+84eVMxJE/QGohiWQkzs0tVFIJsAHyN19YKPbelNrQ==
+electron@^11.4.6:
+  version "11.4.6"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-11.4.6.tgz#0a5e3aebca0bf576633a5adb8fb4295eb7221afc"
+  integrity sha512-WN7zUwaAmcB1lXyyaMxPsNWAFCpRMDltQb4zCjvoD5TBBoePcjd6UwyVUD93pSKJXjmWoae8PbZWrbZlXowcSg==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"
@@ -4626,13 +4626,13 @@ parseurl@~1.3.3:
   resolved "https://registry.yarnpkg.com/parseurl/-/parseurl-1.3.3.tgz#9da19e7bee8d12dff0513ed5b76957793bc2e8d4"
   integrity sha512-CiyeOxFT/JZyN5m0z9PfXw4SCBJ6Sygz1Dpl0wqjlhDEGGBP1GnsUVEL0p63hoG1fcj3fHynXi9NYO4nWOL+qQ==
 
+"passwd-strength@git+https://github.com/michaeltout/passwd-strength.git":
+  version "1.1.0"
+  resolved "git+https://github.com/michaeltout/passwd-strength.git#ae327fa269ab70c86d4866e8a376d63f3c50f11f"
+
 "passwd-strength@git+https://github.com/pbca26/passwd-strength.git":
   version "1.1.0"
   resolved "git+https://github.com/pbca26/passwd-strength.git#3890ea7d0c5efb2ebaae0c3e93770f62ae7ec4c5"
-
-"passwd-strength@https://github.com/michaeltout/passwd-strength.git":
-  version "1.1.0"
-  resolved "https://github.com/michaeltout/passwd-strength.git#ae327fa269ab70c86d4866e8a376d63f3c50f11f"
 
 path-exists@^3.0.0:
   version "3.0.0"
