@@ -25,17 +25,17 @@ module.exports = (api) => {
       let paramArray = [idJson]
 
       //we need minimum 201 VRSC / VRSCTEST in the ID name to launch a currency
-      controlAddress = await api.native.callDaemon(
-        coin,
-        "sendcurrency",
-        [ "*",
-          [
-              {address: name,
-              amount: 201
-              },
-          ]
-        ]
-      );
+   //   controlAddress = await api.native.callDaemon(
+    //    coin,
+   //     "sendcurrency",
+    //    [ "*",
+    //      [
+   //           {address: name,
+    //          amount: 201
+    //          },
+     //     ]
+    //    ]
+    //  );
       api.native
         .callDaemon(
           coin,
