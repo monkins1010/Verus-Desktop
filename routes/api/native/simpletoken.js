@@ -24,7 +24,8 @@ module.exports = (api) => {
             nameCommitmentResult.namereservation
           ) {
             let localCommitments = await api.loadLocalCommitments()
-            let saveCommitment = { ...nameCommitmentResult, controlAddress, simple_addresses, amount }
+            let tokenState = 0    //TODO replace with ENUM for differnt commitment type tracking
+            let saveCommitment = { ...nameCommitmentResult, controlAddress, simple_addresses, amount, tokenState }
   
             if (localCommitments[coin]) {
               const existingIndex = localCommitments[coin].findIndex((value) => value.namereservation.name === name)

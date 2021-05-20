@@ -40,7 +40,8 @@ module.exports = (api) => {
       setImmediate(async () => {
         try {
           const rpcJsonParsed = api.native.convertRpcJson(await api.sendToCli(_payload))
-  
+           api.log(JSON.stringify(_payload, null, 2), `native.rpc.success.result ${req_id}`)
+           api.log(JSON.stringify(rpcJsonParsed, null, 2), `native.rpc.success.result ${req_id}`)
           if (rpcJsonParsed.msg === 'success') {
             if (api.appConfig.general.main.livelog) {
               api.writeLog(JSON.stringify(rpcJsonParsed, null, 2), `native.rpc.success.result ${req_id}`)
