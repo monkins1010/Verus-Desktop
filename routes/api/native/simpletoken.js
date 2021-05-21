@@ -1,7 +1,7 @@
 const Promise = require('bluebird');
 
 module.exports = (api) => {    
-  api.native.create_simple_token = (coin, name, referralId, primaryAddress, simple_addresses, amount) => {
+  api.native.create_simple_token = (coin, name, referralId, primaryAddress, extra) => {
     return new Promise(async (resolve, reject) => {      
       let params = referralId ? [name, null, referralId] : [name, null]
       let controlAddress
@@ -24,8 +24,8 @@ module.exports = (api) => {
             nameCommitmentResult.namereservation
           ) {
             let localCommitments = await api.loadLocalCommitments()
-            let tokenState = 0    //TODO replace with ENUM for differnt commitment type tracking
-            let saveCommitment = { ...nameCommitmentResult, controlAddress, simple_addresses, amount, tokenState }
+            
+            let saveCommitment = { ...nameCommitmentResult, controlAddress, extra }
   
             if (localCommitments[coin]) {
               const existingIndex = localCommitments[coin].findIndex((value) => value.namereservation.name === name)
@@ -55,16 +55,16 @@ module.exports = (api) => {
     });
   };
 
-  api.native.create_simple_token_preflight = (coin, name, referralId, primaryAddress, simple_addresses, amount) => {
+  api.native.create_simple_token_preflight = (coin, name, referralId, primaryAddress, extra) => {
     return new Promise((resolve, reject) => {      
-      resolve({ namereservation: { coin, name, referral: referralId, primaryAddress, simple_addresses, amount } });
+      resolve({ namereservation: { coin, name, referral: referralId, primaryAddress, simple_addresses : extra.simple_addresses, amount: extra.amount } });
     });
   };
 
   api.setPost('/native/create_simple_token', (req, res, next) => {
-    const { chainTicker, name, referralId, primaryAddress, simple_addresses, amount } = req.body
+    const { chainTicker, name, referralId, primaryAddress, extra } = req.body
 
-    api.native.create_simple_token(chainTicker, name, referralId, primaryAddress, simple_addresses, amount)
+    api.native.create_simple_token(chainTicker, name, referralId, primaryAddress, extra)
     .then((nameCommitmentResult) => {
       const retObj = {
         msg: 'success',
@@ -84,9 +84,9 @@ module.exports = (api) => {
   });
 
   api.setPost('/native/create_simple_token_preflight', (req, res, next) => {
-    const { chainTicker, name, referralId, primaryAddress, simple_addresses, amount } = req.body
+    const { chainTicker, name, referralId, primaryAddress, extra } = req.body
 
-    api.native.create_simple_token_preflight(chainTicker, name, referralId, primaryAddress, simple_addresses, amount)
+    api.native.create_simple_token_preflight(chainTicker, name, referralId, primaryAddress, extra)
     .then((preflightRes) => {
       const retObj = {
         msg: 'success',

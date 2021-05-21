@@ -3,7 +3,7 @@ const { watchFile } = require('original-fs');
 
 module.exports = (api) => {
   /**
-   * defines a simple cutoken currency
+   * defines a simple kickstart project backed by verus only
    * @param {String} name The name of the token
    * @param {number} options chain launch params
    * @param {String[]} preallocations a list of ["id":amount,...] addresses to recive preallocations
@@ -18,21 +18,26 @@ module.exports = (api) => {
   }
 
 
-  api.native.launch_simple_token = (
+  api.native.launch_simple_kickstart = (
     coin,
     name,
-    simple_address,
-    amount
+    extra
   ) => {
 
-    let preallocation = {};
-    preallocation[simple_address] = amount;
+    let currencies = [coin]
+    let minpreconversion = [extra.min_amount]
+    let maxpreconversion =  [extra.max_amount]
+    let preallocations = [{[name]: extra.receiveamount} ]
+    let startblock = extra.blockheight
     let options = 96
-    let preallocations = [preallocation]
     let idJson = {
         name,
         options,
-        preallocations
+        currencies,
+        minpreconversion,
+        maxpreconversion,
+        preallocations,
+        startblock
     }
 
 
@@ -95,7 +100,7 @@ module.exports = (api) => {
   
             await api.saveLocalCommitments(localCommitments);
   
-            resolve({Status: "Token successfully launched, wait up to 20 minutes for it to appear in multiverse tab", coin, Token: name, Supply: amount});
+            resolve({Status: "Token successfully launched, wait up to 20 minutes for it to appear in multiverse tab", coin, Kickstarter: name});
 
           }
         })
@@ -110,36 +115,32 @@ module.exports = (api) => {
   };
 
   //TODO: Add more checks in here as well
-  api.native.launch_simple_token_preflight = (
+  api.native.launch_simple_kickstart_preflight = (
     coin,
     name,
-    simple_addresses,
-    amount
+    extra
   ) => {
     return new Promise((resolve, reject) => {
       resolve({
         chainTicker: coin,
         name,
-        simple_addresses,
-        amount
+        extra
       })
     });
   };
 
-  api.setPost('/native/launch_simple_token', (req, res, next) => {
+  api.setPost('/native/launch_simple_kickstart', (req, res, next) => {
     const {
       chainTicker,
       name,
-      simple_addresses,
-      amount
+      extra
     } = req.body;
 
     api.native
-      .launch_simple_token(
+      .launch_simple_kickstart(
         chainTicker,
         name,
-        simple_addresses,
-        amount
+        extra
       )
       .then(idObj => {
         const retObj = {
@@ -159,20 +160,18 @@ module.exports = (api) => {
       });
   });
 
-  api.setPost('/native/launch_simple_token_preflight', (req, res, next) => {
+  api.setPost('/native/launch_simple_kickstart_preflight', (req, res, next) => {
     const {
       chainTicker,
       name,
-      simple_addresses,
-      amount
+      extra
     } = req.body;
 
     api.native
-      .launch_simple_token_preflight(
+      .launch_simple_kickstart_preflight(
         chainTicker,
         name,
-        simple_addresses,
-        amount
+        extra
       )
       .then(idRegistryResult => {
         const retObj = {
