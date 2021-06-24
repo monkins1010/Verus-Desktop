@@ -3,7 +3,7 @@ const { watchFile } = require('original-fs');
 
 module.exports = (api) => {
   /**
-   * defines a simple kickstart project backed by verus only
+   * defines a simple crowdfund project backed by verus only
    * @param {String} name The name of the token
    * @param {number} options chain launch params
    * @param {String[]} preallocations a list of ["id":amount,...] addresses to recive preallocations
@@ -18,7 +18,7 @@ module.exports = (api) => {
   }
 
 
-  api.native.launch_simple_kickstart = (
+  api.native.launch_simple_crowdfund = (
     coin,
     name,
     extra
@@ -100,7 +100,7 @@ module.exports = (api) => {
   
             await api.saveLocalCommitments(localCommitments);
   
-            resolve({Status: "Token successfully launched, wait up to 20 minutes for it to appear in multiverse tab", coin, Kickstarter: name});
+            resolve({Status: "Token successfully launched, wait up to 20 minutes for it to appear in multiverse tab", coin, crowdfund: name});
 
           }
         })
@@ -115,7 +115,7 @@ module.exports = (api) => {
   };
 
   //TODO: Add more checks in here as well
-  api.native.launch_simple_kickstart_preflight = (
+  api.native.launch_simple_crowdfund_preflight = (
     coin,
     name,
     extra
@@ -129,7 +129,7 @@ module.exports = (api) => {
     });
   };
 
-  api.setPost('/native/launch_simple_kickstart', (req, res, next) => {
+  api.setPost('/native/launch_simple_crowdfund', (req, res, next) => {
     const {
       chainTicker,
       name,
@@ -137,7 +137,7 @@ module.exports = (api) => {
     } = req.body;
 
     api.native
-      .launch_simple_kickstart(
+      .launch_simple_crowdfund(
         chainTicker,
         name,
         extra
@@ -160,7 +160,7 @@ module.exports = (api) => {
       });
   });
 
-  api.setPost('/native/launch_simple_kickstart_preflight', (req, res, next) => {
+  api.setPost('/native/launch_simple_crowdfund_preflight', (req, res, next) => {
     const {
       chainTicker,
       name,
@@ -168,7 +168,7 @@ module.exports = (api) => {
     } = req.body;
 
     api.native
-      .launch_simple_kickstart_preflight(
+      .launch_simple_crowdfund_preflight(
         chainTicker,
         name,
         extra
