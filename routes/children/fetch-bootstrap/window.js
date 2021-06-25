@@ -25,7 +25,8 @@ function createFetchBoostrapWindow(chainTicker, appConfig) {
 			title: `Fetch ${chainTicker} Bootstrap`,
 			webPreferences: {
 				enableRemoteModule: true,
-				nodeIntegration: true
+				nodeIntegration: true,
+				contextIsolation: false
 			}
 		});
 

@@ -53,10 +53,8 @@ api.electrumJSCore = require('./electrumjs/electrumjs.core.js');
 api.electrumJSNetworks = require('./electrumjs/electrumjs.networks.js');
 const {
   electrumServers,
-  electrumServersFlag,
 } = require('./electrumjs/electrumServers.js');
 api.electrumServers = electrumServers;
-api.electrumServersFlag = electrumServersFlag;
 api.electrumServersV1_4 = {};
 api.nspvProcesses = {};
 api.nspvPorts = {};

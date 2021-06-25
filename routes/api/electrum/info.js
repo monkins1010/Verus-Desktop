@@ -31,23 +31,6 @@ module.exports = (api) => {
       serverList: serverList.toString(),
       nspv,
     }}));
-      
-    const coin = req.query.chainTicker;
-    let retObj = {}
-
-    try {
-      retObj = {
-        msg: 'success',
-        result: api.electrum.get_info(coin)
-      }
-    } catch (e) {
-      retObj = {
-        msg: 'error',
-        result: e.message
-      }
-    }
-    
-    res.send(JSON.stringify(retObj));  
   });
 
   return api;

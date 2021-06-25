@@ -19,6 +19,7 @@ const bodyParser = require('body-parser');
 const Promise = require('bluebird');
 const { formatBytes } = require('agama-wallet-lib/src/utils');
 const { dialog } = require('electron')
+require('@electron/remote/main').initialize()
 
 global.USB_HOME_DIR = path.resolve(__dirname, './usb_home')
 
@@ -359,6 +360,12 @@ function createWindow(status) {
 					
 					api.promptUpdate(mainWindow)
 		    }, 40);
+
+				if (appConfig.general.main.periodicallyCheckUpdates) {
+					setInterval(() => {
+						api.promptUpdate(mainWindow)
+					}, 86400000)
+				}
 		  });
 
 			mainWindow.webContents.on('context-menu', (e, params) => { // context-menu returns params
@@ -470,12 +477,10 @@ app.on('web-contents-created', (event, contents) => {
 	contents.on('will-navigate', (event, navigationUrl) => {
 		event.preventDefault()
 	})
-	
-	contents.on('new-window', async (event, navigationUrl) => {
-    // In this example, we'll ask the operating system
-    // to open this event's url in the default browser.
-    event.preventDefault()
-  })
+
+	contents.setWindowOpenHandler(() => {
+		return { action: "deny" }
+	})
 })
 
 // Emitted before the application starts closing its windows.

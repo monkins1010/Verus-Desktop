@@ -56,6 +56,7 @@ const appConfig = {
         pbaasChains: [],
         pbaasTestmode: true,
         alwaysPromptUpdates: true,
+        periodicallyCheckUpdates: true,
         encryptApiPost: true
       },
       electrum: {
@@ -147,7 +148,12 @@ const appConfig = {
         alwaysPromptUpdates: {
           type: "checkbox",
           displayName: "Notify me about all app updates",
-          info: "Enables update notifications on app start for all updates, including non-mandatory."
+          info: "Enables update notifications for all updates, including non-mandatory."
+        },
+        periodicallyCheckUpdates: {
+          type: "checkbox",
+          displayName: "Periodically check for updates",
+          info: "Sets Verus Desktop to periodically check for updates every 24 hours."
         },
         encryptApiPost: {
           hidden: true

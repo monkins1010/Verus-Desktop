@@ -131,7 +131,6 @@ module.exports = (api) => {
           (api.electrumServers[key] && !api.electrumServers[key].serverList)) {
         //api.log(`disable ${key}, coin config check not passed`, 'spv.coin');
         delete api.electrumServers[key];
-        delete api.electrumServersFlag[key];
       } else {
         _totalCoins++;
       }

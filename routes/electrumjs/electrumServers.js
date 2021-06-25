@@ -1,6 +1,21 @@
 const disableCoins = require('./electrumServersConfig');
-const _electrumServers = require('agama-wallet-lib/src/electrum-servers').electrumServers;
-//const fs = require('fs');
+const { electrum, general } = require('verus-wallet-endpoints')
+const { fees, stopgap } = general
+
+let _electrumServers = {}
+
+for (let key in electrum.servers) {
+  const ticker = stopgap.assumeTicker(key)
+
+  if (ticker) {
+    _electrumServers[ticker] = {
+      txfee: fees[key] ? fees[key] : 0,
+      serverList: electrum.servers[key],
+    };
+  }
+}
+
+Object.freeze(_electrumServers)
 
 const _electrumServersExtend = {
   vpn: {
@@ -272,20 +287,13 @@ const _electrumServersExtend = {
 };
 
 let electrumServers = Object.assign({}, _electrumServers, _electrumServersExtend);
-let electrumServersFlag = Object.assign({}, _electrumServers, _electrumServersExtend);
 
 for (let i = 0; i < disableCoins.length; i++) {
   if (electrumServers[disableCoins[i]]) {
     delete electrumServers[disableCoins[i]];
-    delete electrumServersFlag[disableCoins[i]];
   }
 }
 
-for (let key in electrumServersFlag) {
-  electrumServersFlag[key] = true;
-}
-
 module.exports = {
-  electrumServers,
-  electrumServersFlag,
+  electrumServers
 };
