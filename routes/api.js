@@ -169,6 +169,7 @@ api = require('./api/native/shieldcoinbase.js')(api);
 api = require('./api/native/simpletoken.js')(api);
 api = require('./api/native/definesimpletoken.js')(api);
 api = require('./api/native/definesimplecrowdfund.js')(api);
+api = require('./api/native/createAdvancedCurrency.js')(api);
 
 // general network calls
 api.networkFees = {}
