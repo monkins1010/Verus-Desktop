@@ -1,13 +1,11 @@
-const { Menu } = require('electron');
+const { Menu, shell, dialog } = require('electron');
 const electron = require('electron');
 const app = electron.app;
-const { shell } = require('electron');
 const {
   pathsAgama,
   pathsDaemons,
 } = require('../routes/api/pathsUtil');
-const { createFetchBoostrapWindow } = require('../routes/children/fetch-bootstrap/window');
-const { appConfig, promptUpdate, generateDiagnosticPacket } = require('../routes/api');
+const { promptUpdate, generateDiagnosticPacket } = require('../routes/api');
 
 const template = [
   {
@@ -142,7 +140,13 @@ const template = [
       {
         label: 'Bootstrap VRSC',
         click (item, focusedWindow) {
-          createFetchBoostrapWindow('VRSC', appConfig)
+          dialog.showMessageBox({
+            type: "info",
+            title: "Bootstrap VRSC",
+            message:
+              "To bootstrap VRSC, select the 'Bootstrap' checkbox when adding it as a coin in native mode, or select 'Bootstrap' from the VRSC cog menu.",
+            buttons: ["OK"],
+          });
         }
       },
       {

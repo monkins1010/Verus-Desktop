@@ -12,7 +12,10 @@ function openurlhandler(event, urlstring, apihandler) {
 
     return apihandler(url);
   } catch (e) {
-    dialog.showErrorBox("Something went wrong", e.message);
+    dialog.showErrorBox(
+      "Something went wrong",
+      `Error: "${e.message}". For url string: "${urlstring}".`
+    );
   }
 }
 

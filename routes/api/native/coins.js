@@ -6,8 +6,7 @@ module.exports = (api) => {
     fallbackPort,
     dirNames,
     confName,
-    tags = [],
-    bootstrap = false
+    tags = []
   ) => {
     let acOptions = [];
     const chainParams = api.chainParams[coin];
@@ -28,7 +27,7 @@ module.exports = (api) => {
 
     return new Promise((resolve, reject) => {
       api
-        .startDaemon(coin, acOptions, daemon, dirNames, confName, fallbackPort, bootstrap)
+        .startDaemon(coin, acOptions, daemon, dirNames, confName, fallbackPort)
         .then(() => {
           // Set timeout for "No running daemon message" to be
           // "Initializing daemon" for a few seconds
@@ -36,7 +35,7 @@ module.exports = (api) => {
 
           setTimeout(() => {
             api.coinsInitializing[coin] = false;
-          }, 20000);
+          }, 40000);
 
           api.log(
             `${coin} daemon activation started successfully, waiting on daemon response...`,
@@ -54,7 +53,7 @@ module.exports = (api) => {
     });
   };
 
-  api.native.addCoin = (chainTicker, launchConfig, startupOptions, bootstrap = false) => {
+  api.native.addCoin = (chainTicker, launchConfig, startupOptions) => {
     let { daemon, fallbackPort, dirNames, confName, tags } = launchConfig;
 
     let startupParams = [
@@ -91,8 +90,7 @@ module.exports = (api) => {
       fallbackPort,
       dirNames,
       confName,
-      tags,
-      bootstrap
+      tags
     );
 
     delete api.native.launchConfigs[chainTicker]

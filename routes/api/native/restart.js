@@ -1,5 +1,5 @@
 module.exports = (api) => {
-  api.native.restartCoin = async (chainTicker, launchConfig, startupOptions, bootstrap = false) => {
+  api.native.restartCoin = async (chainTicker, launchConfig, startupOptions) => {
     if (!api.coinsInitializing[chainTicker]) {
       api.log('initiating restart for ' + chainTicker, 'restartCoin')
       api.coinsInitializing[chainTicker] = true
@@ -18,7 +18,7 @@ module.exports = (api) => {
               delete api.native.launchConfigs[chainTicker]
               api.native.launchConfigs[chainTicker] = launchConfig
               
-              resolve(await api.native.addCoin(chainTicker, launchConfig, startupOptions, bootstrap))
+              resolve(await api.native.addCoin(chainTicker, launchConfig, startupOptions))
             } catch(e) {
               reject(e)
             }
@@ -40,9 +40,9 @@ module.exports = (api) => {
   }
 
   api.setPost('/native/coins/restart', (req, res) => {
-    const { chainTicker, launchConfig, startupOptions, bootstrap } = req.body
+    const { chainTicker, launchConfig, startupOptions } = req.body
     
-    api.native.restartCoin(chainTicker, launchConfig, startupOptions, bootstrap)
+    api.native.restartCoin(chainTicker, launchConfig, startupOptions)
     .then(result => {
       res.send(JSON.stringify({
         msg: 'success',

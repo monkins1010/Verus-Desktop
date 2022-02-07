@@ -201,6 +201,8 @@ api = require('./api/native/getoffers')(api);
 api = require('./api/native/closeoffers')(api);
 api = require('./api/native/takeoffer')(api);
 api = require('./api/native/setidentitytimelock')(api);
+api = require('./api/native/exportwallet')(api);
+api = require('./api/native/importwallet')(api);
 
 // general network calls
 api.networkFees = {}
