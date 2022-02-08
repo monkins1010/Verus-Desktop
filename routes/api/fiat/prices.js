@@ -1,13 +1,13 @@
 const Promise = require('bluebird');
 const { requestJson, requestXml } = require('../utils/request/request')
-const { DOMParser } = require('xmldom');
+const { DOMParser } = require('@xmldom/xmldom');
 const { getCoinObj } = require('../../coinDataTranslated');
 
 module.exports = (api) => {
   api.fiat.supportedCurrencies = [
-    'AUD', 
-    'BRL', 
-    'GBP', 
+    'AUD',
+    'BRL',
+    'GBP',
     'BGN',
     'CAD',
     'HRK',
@@ -53,7 +53,7 @@ module.exports = (api) => {
           "GET",
           url
         );
-  
+
         const parser = new DOMParser();
         const xmlDoc = parser.parseFromString(response, "text/xml");
         let exchangeRates = {}
@@ -100,11 +100,11 @@ module.exports = (api) => {
   }
 
   /**
-   * Fetches price for specified cryptocurrency (uppercase ticker) from atomic explorer 
+   * Fetches price for specified cryptocurrency (uppercase ticker) from atomic explorer
    * in specified currency. If no currency specified, fetches price in all available currencies.
    */
   api.fiat.get_fiatprice = (coin) => {
-    return new Promise(async (resolve, reject) => {  
+    return new Promise(async (resolve, reject) => {
       const coinObj = getCoinObj(coin);
       const param = api.fiat.coinpaprika_coin_ids[coin]
         ? api.fiat.coinpaprika_coin_ids[coin]
@@ -118,7 +118,7 @@ module.exports = (api) => {
           "GET",
           url
         );
-  
+
         if (res.error || !res || !res[0] || !res[0].close) {
           reject(new Error(`Failed to get price for ${coin} through CoinPaprika API. ${url}`))
         } else {
@@ -134,7 +134,7 @@ module.exports = (api) => {
                   priceCloseUsd * fiatRates.result[fiatCurrency];
               }
             })
-          } 
+          }
 
           resolve({
             msg: "success",
@@ -156,7 +156,7 @@ module.exports = (api) => {
 
     api.fiat.get_fiatprice(coin, currency)
     .then((priceObj) => {
-      res.send(JSON.stringify(priceObj)); 
+      res.send(JSON.stringify(priceObj));
     })
     .catch(e => {
       res.send(
@@ -167,7 +167,7 @@ module.exports = (api) => {
               ? ("No fiat value found for " + coin)
               : e.message,
         })
-      ); 
+      );
     })
   });
 
@@ -177,7 +177,7 @@ module.exports = (api) => {
 
     api.fiat.get_fiatprice(coin, currency)
     .then((priceObj) => {
-      res.send(JSON.stringify(priceObj)); 
+      res.send(JSON.stringify(priceObj));
     })
     .catch(e => {
       res.send(JSON.stringify({
@@ -186,7 +186,7 @@ module.exports = (api) => {
             e.message != null && e.message.includes("No fiat value found")
               ? ("No fiat value found for " + coin)
               : e.message,
-      })); 
+      }));
     })
   });
 
@@ -215,7 +215,7 @@ module.exports = (api) => {
       res.send(JSON.stringify({
         msg: 'error',
         result: `No interface for ${chainTicker}`
-      })); 
+      }));
     }
   });
 
@@ -225,7 +225,7 @@ module.exports = (api) => {
 
     api.fiat.get_fiatprice(coin, currency)
     .then((priceObj) => {
-      res.send(JSON.stringify(priceObj)); 
+      res.send(JSON.stringify(priceObj));
     })
     .catch(e => {
       res.send(
@@ -236,7 +236,7 @@ module.exports = (api) => {
               ? "No fiat value found for " + coin
               : e.message,
         })
-      ); 
+      );
     })
   });
 
