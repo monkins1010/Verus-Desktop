@@ -1014,7 +1014,7 @@ bitcoinjs-message@^2.1.0:
 
 "bitgo-utxo-lib@git+https://github.com/VerusCoin/bitgo-utxo-lib.git":
   version "1.5.0"
-  resolved "git+https://github.com/VerusCoin/bitgo-utxo-lib.git#60f4ae3056cbd8c295571c9c6480058ae9a653b1"
+  resolved "git+https://github.com/VerusCoin/bitgo-utxo-lib.git#2d35757b7d4e611cf8d02440f6f1fec4da3a080b"
   dependencies:
     bech32 "0.0.3"
     bigi "^1.4.0"

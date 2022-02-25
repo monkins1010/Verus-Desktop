@@ -1,5 +1,5 @@
 const { isKomodoCoin } = require('agama-wallet-lib/src/coin-helpers');
-const _txDecoder = require('agama-wallet-lib/src/transaction-decoder');
+const _txDecoder = require('../utils/electrum/transaction/decoder');
 const semverCmp = require('semver-compare');
 const electrumMinVersionProtocolV1_4 = '1.9.0';
 

@@ -49,6 +49,7 @@
   "dependencies": {
     "@electron/remote": "1.1.0",
     "@ethersproject/signing-key": "5.0.5",
+    "@xmldom/xmldom": "0.7.5",
     "agama-wallet-lib": "git+https://github.com/VerusCoin/agama-wallet-lib.git#bd1ff58f25de7c041ee8670d669637b4e72a4e77",
     "arch": "2.1.0",
     "async": "2.6.0",
@@ -80,11 +81,11 @@
     "sha256": "0.2.0",
     "socket.io": "4.4.1",
     "systeminformation": "5.6.11",
+    "tx-builder": "^0.18.0",
     "unzipper": "0.10.11",
     "verus-typescript-primitives": "https://github.com/VerusCoin/verus-typescript-primitives.git",
     "verus-wallet-endpoints": "https://github.com/michaeltout/verus-wallet-endpoints.git",
-    "wif": "2.0.6",
-    "@xmldom/xmldom": "0.7.5"
+    "wif": "2.0.6"
   },
   "optionalDependencies": {
     "osx-temperature-sensor": "1.0.4"

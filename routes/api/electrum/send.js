@@ -1,6 +1,6 @@
 const coinSelect = require('coinselect');
 const Promise = require('bluebird');
-const { transaction } = require('agama-wallet-lib/src/transaction-builder');
+const { transaction } = require('../utils/electrum/transaction/builder');
 const { fromSats, toSats } = require('agama-wallet-lib/src/utils');
 
 // TODO: error handling, input vars check
@@ -105,6 +105,7 @@ module.exports = (api) => {
     let value = toSats(Number(amount));
     let wif
     let fromAddress = customFromAddress ? customFromAddress : api.electrumKeys[chainTicker.toLowerCase()].pub
+    let currentHeight;
 
     if (customWif) wif = customWif
     if (votingTx) wif = api.elections.priv
@@ -144,6 +145,8 @@ module.exports = (api) => {
                   currentHeight: utxoList[i].currentHeight
                 };
 
+                currentHeight = utxoList[i].currentHeight
+
                 if (utxoList[i].hasOwnProperty("dpowSecured")) {
                   _formattedUtxo.dpowSecured = utxoList[i].dpowSecured;
                   dpowSecured = true;
@@ -161,6 +164,8 @@ module.exports = (api) => {
                   height: utxoList[i].height,
                   currentHeight: utxoList[i].currentHeight
                 };
+
+                currentHeight = utxoList[i].currentHeight
 
                 if (utxoList[i].hasOwnProperty("dpowSecured")) {
                   _formattedUtxo.dpowSecured = utxoList[i].dpowSecured;
@@ -501,7 +506,7 @@ module.exports = (api) => {
                       inputs,
                       _change,
                       value,
-                      { unsigned: true }
+                      { unsigned: true, currentHeight }
                     );
                   } else {
                     if (!offlineTx) {
@@ -510,12 +515,11 @@ module.exports = (api) => {
                         toAddress,
                         fromAddress,
                         wif,
-                        api.electrumJSNetworks[network] ||
-                          api.getNetworkData(network),
+                        api.electrumJSNetworks[network] || api.getNetworkData(network),
                         inputs,
                         _change,
                         value,
-                        opreturn ? { opreturn } : null
+                        opreturn ? { opreturn, currentHeight } : { currentHeight }
                       );
                     }
                   }
