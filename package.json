@@ -179,6 +179,7 @@
     "ansi-regex": "5.0.1",
     "qs": "6.2.3",
     "debug": "2.6.9",
+    "follow-redirects": "1.14.8",
     "fresh": "0.5.2",
     "mime": "1.4.1",
     "json-schema": "0.4.0"
