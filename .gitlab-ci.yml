@@ -75,6 +75,14 @@ build:linux:
     - sed -i "s/process.env.INFURA_PROJECT_ID/'${INFURA_PROJECT_ID}'/g" keys/infura.js
     - sed -i "s/process.env.ETHERSCAN_API_KEY/'${ETHERSCAN_KEY}'/g" keys/etherscan.js
     - yarn install
+    - git clone https://github.com/VerusCoin/verus-login-consent-client.git
+    - cd verus-login-consent-client
+    - yarn install
+    - yarn run build
+    - mkdir -p ../assets/plugins/builtin/verus-login-consent-client
+    - cp build/* ../assets/plugins/builtin/verus-login-consent-client
+    - cd ..
+    - rm -rf verus-login-consent-client
   script:
     - yarn run dist
   after_script:
@@ -121,6 +129,14 @@ build:linux:arm64:
     - sed -i "s/process.env.INFURA_PROJECT_ID/'${INFURA_PROJECT_ID}'/g" keys/infura.js
     - sed -i "s/process.env.ETHERSCAN_API_KEY/'${ETHERSCAN_KEY}'/g" keys/etherscan.js
     - yarn install
+    - git clone https://github.com/VerusCoin/verus-login-consent-client.git
+    - cd verus-login-consent-client
+    - yarn install
+    - yarn run build
+    - mkdir -p ../assets/plugins/builtin/verus-login-consent-client
+    - cp build/* ../assets/plugins/builtin/verus-login-consent-client
+    - cd ..
+    - rm -rf verus-login-consent-client
   script:
     - yarn run dist --arm64
   after_script:
@@ -179,6 +195,14 @@ build:windows:
     - sed -i "s/process.env.INFURA_PROJECT_ID/'${INFURA_PROJECT_ID}'/g" keys/infura.js
     - sed -i "s/process.env.ETHERSCAN_API_KEY/'${ETHERSCAN_KEY}'/g" keys/etherscan.js
     - yarn install
+    - git clone https://github.com/VerusCoin/verus-login-consent-client.git
+    - cd verus-login-consent-client
+    - yarn install
+    - yarn run build
+    - mkdir -p ../assets/plugins/builtin/verus-login-consent-client
+    - cp build/* ../assets/plugins/builtin/verus-login-consent-client
+    - cd ..
+    - rm -rf verus-login-consent-client
   script:
     - yarn run dist-win
   after_script:
