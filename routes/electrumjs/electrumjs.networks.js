@@ -1,7 +1,3 @@
-const legacyNetworks = require('agama-wallet-lib/src/bitcoinjs-networks');
-const { networks } = require('bitgo-utxo-lib');
+let networks = require('agama-wallet-lib/src/bitcoinjs-networks');
 
-module.exports = {
-  ...legacyNetworks,
-  zec: networks.zcash
-};
+module.exports = networks;

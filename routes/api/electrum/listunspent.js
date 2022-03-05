@@ -24,6 +24,7 @@ module.exports = (api) => {
         .then((_utxoJSON) => {
           if (_utxoJSON &&
               _utxoJSON.length) {
+            let formattedUtxoList = [];
             let _utxo = [];
 
             api.electrumGetCurrentBlock(network, api.electrum.coinData[network.toLowerCase()].nspv)
