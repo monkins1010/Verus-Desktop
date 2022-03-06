@@ -112,14 +112,20 @@ module.exports = (api) => {
         };
       }
       
-      if (rpcJson.error || rpcJson.result === "error") {
+      if (rpcJson.code && rpcJson.code !== RPC_OK) {
+        return {
+          msg: "error",
+          code: rpcJson.code,
+          result: rpcJson.message,
+        };
+      } else if (rpcJson.error || rpcJson.result === "error") {
         return {
           msg: "error",
           code: rpcJson.error ? rpcJson.error.code : RPC_ERROR_UNKNOWN,
-          result: rpcJson.error ? rpcJson.error.message : "Unknown error"
+          result: rpcJson.error ? rpcJson.error.message : "Unknown error",
         };
-      } else if (rpcJson.hasOwnProperty('msg') && rpcJson.hasOwnProperty('result')) {
-        return rpcJson
+      } else if (rpcJson.hasOwnProperty("msg") && rpcJson.hasOwnProperty("result")) {
+        return rpcJson;
       } else {
         return { msg: "success", code: RPC_OK, result: rpcJson.result };
       }

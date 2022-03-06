@@ -57,7 +57,8 @@ const appConfig = {
         pbaasTestmode: true,
         alwaysPromptUpdates: true,
         periodicallyCheckUpdates: true,
-        encryptApiPost: true
+        encryptApiPost: true,
+        enableDeeplink: false
       },
       electrum: {
         maxVinParseLimit: 120,
@@ -157,6 +158,11 @@ const appConfig = {
         },
         encryptApiPost: {
           hidden: true
+        },
+        enableDeeplink: {
+          type: "checkbox",
+          displayName: "Enable experimental VerusID login",
+          info: "Enable logging in with VerusID through browser redirects. This is an experimental feature."
         },
       },
       electrum: {

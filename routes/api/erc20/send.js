@@ -78,13 +78,14 @@ module.exports = (api) => {
     await api.erc20.txPreflight(contractId, address, amount)
     
     const privKey = api.erc20.wallet.signer.signingKey.privateKey
-    const contract = web3Provider.contract
+    const dummySigner = new ethers.VoidSigner(api.erc20.wallet.address, web3Provider.interface.DefaultProvider)
+    const contract = web3Provider.contract.connect(dummySigner)
     const gasPrice = await web3Provider.interface.DefaultProvider.getGasPrice()
     const amountBn = ethers.utils.parseUnits(
       scientificToDecimal(amount),
       web3Provider.decimals
     );
-    const signableContract = contract.connect(
+    const signableContract = web3Provider.contract.connect(
       new ethers.Wallet(
         ethers.utils.hexlify(privKey),
         web3Provider.interface.InfuraProvider

@@ -1,6 +1,11 @@
 // TODO: CLEANUP THIS FILE
 const express = require('express');
+const { BuiltinPlugins } = require('./api/utils/plugin/builtin.js');
 let api = express.Router();
+api.rpcCalls = {
+  GET: {},
+  POST: {}
+}
 
 api = require('./api/auth.js')(api);
 
@@ -21,6 +26,20 @@ api.guiLog = {};
 api.rpcConf = {};
 api.customKomodoNetworks = {};
 api.appRuntimeLog = [];
+
+api.plugins = api.plugins = {
+  registry: {},
+  builtin: {}
+}
+api.pluginWindows = {
+  registry: {},
+  builtin: {}
+}
+api.pluginOnCompletes = {
+  registry: {},
+  builtin: {}
+}
+
 api.lockDownAddCoin = false;
 api._isWatchOnly = false;
 
@@ -77,9 +96,20 @@ api = require('./api/config.js')(api);
 api = require('./api/users.js')(api);
 api = require('./api/init.js')(api);
 api = require('./api/utility_apis/checkUpdates')(api);
+api = require('./api/plugin/registry')(api);
+api = require('./api/plugin/install')(api);
+api = require('./api/plugin/start')(api);
+api = require('./api/plugin/stop')(api);
+api = require('./api/plugin/builtin/authenticator')(api);
+api = require('./api/plugin/builtin/loginconsentui')(api);
+api = require('./api/focus')(api);
 
 api.createAgamaDirs();
 api.appConfig = api.loadLocalConfig();
+api.plugins = {
+  registry: api.loadLocalPluginRegistry(),
+  builtin: BuiltinPlugins
+}
 
 api = require('./api/utility_apis/cache')(api);
 
@@ -163,11 +193,16 @@ api = require('./api/native/generate.js')(api);
 api = require('./api/native/coinSupply.js')(api);
 api = require('./api/native/blockSubsidy.js')(api);
 api = require('./api/native/shieldcoinbase.js')(api);
+api = require('./api/native/verusid/verusid.js')(api);
+api = require('./api/native/verusid/login/verifyRequest.js')(api);
+api = require('./api/native/verusid/login/signResponse.js')(api);
 api = require('./api/native/makeoffer')(api);
 api = require('./api/native/getoffers')(api);
 api = require('./api/native/closeoffers')(api);
 api = require('./api/native/takeoffer')(api);
 api = require('./api/native/setidentitytimelock')(api);
+api = require('./api/native/exportwallet')(api);
+api = require('./api/native/importwallet')(api);
 
 // general network calls
 api.networkFees = {}
@@ -189,6 +224,7 @@ api = require('./api/appInfo.js')(api);
 api = require('./api/conf.js')(api);
 api = require('./api/daemonControl.js')(api);
 api = require('./api/system.js')(api);
+api = require('./api/dlhandler.js')(api);
 
 // Utility APIs
 api = require('./api/utility_apis/csvExport.js')(api);

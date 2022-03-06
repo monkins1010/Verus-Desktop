@@ -7,7 +7,7 @@ const zcashParamsSources = {
     groth16: 'https://agama.komodoplatform.com/file/komodo/sapling-params/sprout-groth16.params',
   },
   'z.cash': {
-    proving: 'https://z.cash/downloads/sprout-proving.key',
+    proving: 'https://verus.io/zcparams/sprout-proving.key',
     verifying: 'https://z.cash/downloads/sprout-verifying.key',
     spend: 'https://z.cash/downloads/sapling-spend.params',
     output: 'https://z.cash/downloads/sapling-output.params',

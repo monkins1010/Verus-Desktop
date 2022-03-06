@@ -1,15 +1,9 @@
-const spawn = require('child_process').spawn;
 const fs = require('fs-extra');
-const _fs = require('graceful-fs');
-const fsnode = require('fs');
-const path = require('path');
-const os = require('os');
 const portscanner = require('portscanner');
 const execFile = require('child_process').execFile;
 const Promise = require('bluebird');
-const md5 = require('agama-wallet-lib/src/crypto/md5');
 const { generateRpcPassword } = require('./utils/auth/rpcAuth.js');
-const { createFetchBoostrapWindow } = require('../children/fetch-bootstrap/window.js');
+const { canFetchBootstrap } = require('../children/fetch-bootstrap/window.js');
 
 module.exports = (api) => {
   api.isPbaasDaemon = (daemon, coin) => {
@@ -432,7 +426,6 @@ module.exports = (api) => {
    * @param {Object} dirNames An object containing the names of the coin data
    * directory, from the home directory of the system, on each different OS { darwin, linux, win32 }
    * @param {Number} fallbackPort (optional) The port that will be used if none if found for the coin
-   * @param {Boolean} bootstrap (optional) Whether or not to try and bootstrap the coin from a bootstrap download
    */
   api.startDaemon = (
     coin,
@@ -440,8 +433,7 @@ module.exports = (api) => {
     daemon = "verusd",
     dirNames,
     confName,
-    fallbackPort,
-    bootstrap = false
+    fallbackPort
   ) => {
     const coinLc = coin.toLowerCase();
     let port = null;
@@ -518,17 +510,17 @@ module.exports = (api) => {
         } else api.log(`${coin} data directory retrieved...`, "native.process");
       }
 
-      api.log(
-        `selected data: ${JSON.stringify(acOptions, null, "\t")}`,
-        "native.confd"
-      );
-
       api
         .initCoinDir(coinLc)
         .then(async (existed) => {
-          if (bootstrap || (!existed && coin === "VRSC")) {
-            await createFetchBoostrapWindow(coin, api.appConfig);
+          if (!existed && !acOptions.includes("-bootstrap") && (await canFetchBootstrap(coin))) {
+            acOptions.push("-bootstrap");
           }
+
+          api.log(
+            `selected data: ${JSON.stringify(acOptions, null, "\t")}`,
+            "native.confd"
+          );
 
           return Promise.all([
             api.initLogfile(coin),

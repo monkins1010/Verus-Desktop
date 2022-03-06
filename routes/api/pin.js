@@ -1,8 +1,7 @@
 const fs = require('fs-extra');
 const passwdStrength = require('passwd-strength');
-//const bitcoin = require('bitcoinjs-lib');
 const bitcoin = require('bitgo-utxo-lib');
-const sha256 = require('js-sha256');
+const crypto = require('crypto')
 const bigi = require('bigi');
 const aes256 = require('nodejs-aes256');
 const iocane = require('iocane');
@@ -24,8 +23,7 @@ module.exports = (api) => {
 
     if (_pin &&
         _str) {
-      const hash = sha256.create().update(_str);
-      let bytes = hash.array();
+      let bytes = crypto.createHash('sha256').update(_str).digest()
       bytes[0] &= 248;
       bytes[31] &= 127;
       bytes[31] |= 64;

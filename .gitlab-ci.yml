@@ -8,12 +8,12 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
   DEFAULT_VERUSCOIN_BRANCH: release
-  VERUS_VERSION: 0.9.0-4
-  VERUSCOIN_VERSION: 0.9.0-3
+  VERUS_VERSION: 0.9.1
+  VERUSCOIN_VERSION: 0.9.1
   KOMODO_VERSION: 0.7.1
   KOMODO_DOWNLOAD_URL: https://github.com/KomodoPlatform/komodo/releases/download
-  PIRATE_VERSION: 5.4.0
-  PIRATE_DOWNLOAD_URL: https://github.com/PirateNetwork/pirate/releases/download
+  PIRATE_VERSION: 5.4.1
+  PIRATE_DOWNLOAD_URL: https://gitlab.com/piratenetwork_mirror/pirate_compiled/-/raw/main/TreasureChest
   BINARY_SOURCE: VerusCoin
   VERUS_APPIMAGE_X64: Verus-Desktop-v${VERUS_VERSION}-x86_64.AppImage
   VERUS_APPIMAGE_ARM64: Verus-Desktop-v${VERUS_VERSION}-arm64.AppImage
@@ -69,12 +69,20 @@ build:linux:
     - gsutil cp $STAGING/VerusCoin/Zcash/zcashd-linux-x86_64.tar.gz .
     - tar -xzvf zcashd-linux-x86_64.tar.gz --directory assets/bin/linux64/
     - rm zcashd-linux-x86_64.tar.gz
-    - wget ${PIRATE_DOWNLOAD_URL}/v${PIRATE_VERSION}/${PIRATE_CLI_PACKAGE}
+    - wget ${PIRATE_DOWNLOAD_URL}/${PIRATE_VERSION}/${PIRATE_CLI_PACKAGE}
     - unzip ${PIRATE_CLI_PACKAGE} -d assets/bin/linux64/pirated
     - rm ${PIRATE_CLI_PACKAGE}
     - sed -i "s/process.env.INFURA_PROJECT_ID/'${INFURA_PROJECT_ID}'/g" keys/infura.js
     - sed -i "s/process.env.ETHERSCAN_API_KEY/'${ETHERSCAN_KEY}'/g" keys/etherscan.js
     - yarn install
+    - git clone https://github.com/VerusCoin/verus-login-consent-client.git
+    - cd verus-login-consent-client
+    - yarn install
+    - yarn run build
+    - mkdir -p ../assets/plugins/builtin/verus-login-consent-client
+    - cp build/* ../assets/plugins/builtin/verus-login-consent-client
+    - cd ..
+    - rm -rf verus-login-consent-client
   script:
     - yarn run dist
   after_script:
@@ -115,12 +123,20 @@ build:linux:arm64:
     - gsutil cp $STAGING/VerusCoin/Zcash/zcashd-linux-arm64.tar.gz .
     - tar -xzvf zcashd-linux-arm64.tar.gz --directory assets/bin/linux64/
     - rm zcashd-linux-arm64.tar.gz
-    - wget ${PIRATE_DOWNLOAD_URL}/v${PIRATE_VERSION}/${PIRATE_CLI_PACKAGE}
+    - wget ${PIRATE_DOWNLOAD_URL}/${PIRATE_VERSION}/${PIRATE_CLI_PACKAGE}
     - unzip ${PIRATE_CLI_PACKAGE} -d assets/bin/linux64/pirated
     - rm ${PIRATE_CLI_PACKAGE}
     - sed -i "s/process.env.INFURA_PROJECT_ID/'${INFURA_PROJECT_ID}'/g" keys/infura.js
     - sed -i "s/process.env.ETHERSCAN_API_KEY/'${ETHERSCAN_KEY}'/g" keys/etherscan.js
     - yarn install
+    - git clone https://github.com/VerusCoin/verus-login-consent-client.git
+    - cd verus-login-consent-client
+    - yarn install
+    - yarn run build
+    - mkdir -p ../assets/plugins/builtin/verus-login-consent-client
+    - cp build/* ../assets/plugins/builtin/verus-login-consent-client
+    - cd ..
+    - rm -rf verus-login-consent-client
   script:
     - yarn run dist --arm64
   after_script:
@@ -173,12 +189,20 @@ build:windows:
     - gsutil cp $STAGING/VerusCoin/Zcash/zcashd-win.tar.gz .
     - tar -xzvf zcashd-win.tar.gz --directory assets/bin/win64/
     - rm zcashd-win.tar.gz
-    - wget ${PIRATE_DOWNLOAD_URL}/v${PIRATE_VERSION}/${PIRATE_CLI_PACKAGE}
+    - wget ${PIRATE_DOWNLOAD_URL}/${PIRATE_VERSION}/${PIRATE_CLI_PACKAGE}
     - unzip ${PIRATE_CLI_PACKAGE} -d assets/bin/win64/pirated
     - rm ${PIRATE_CLI_PACKAGE}
     - sed -i "s/process.env.INFURA_PROJECT_ID/'${INFURA_PROJECT_ID}'/g" keys/infura.js
     - sed -i "s/process.env.ETHERSCAN_API_KEY/'${ETHERSCAN_KEY}'/g" keys/etherscan.js
     - yarn install
+    - git clone https://github.com/VerusCoin/verus-login-consent-client.git
+    - cd verus-login-consent-client
+    - yarn install
+    - yarn run build
+    - mkdir -p ../assets/plugins/builtin/verus-login-consent-client
+    - cp build/* ../assets/plugins/builtin/verus-login-consent-client
+    - cd ..
+    - rm -rf verus-login-consent-client
   script:
     - yarn run dist-win
   after_script:
@@ -227,12 +251,20 @@ build:mac:
     - gsutil cp $STAGING/VerusCoin/Zcash/zcashd-macos.tar.gz .
     - tar -xzvf zcashd-macos.tar.gz --directory assets/bin/osx/
     - rm zcashd-macos.tar.gz
-    - wget ${PIRATE_DOWNLOAD_URL}/v${PIRATE_VERSION}/${PIRATE_CLI_PACKAGE}
+    - wget ${PIRATE_DOWNLOAD_URL}/${PIRATE_VERSION}/${PIRATE_CLI_PACKAGE}
     - unzip ${PIRATE_CLI_PACKAGE} -d assets/bin/osx/pirated
     - rm ${PIRATE_CLI_PACKAGE}
     - sed -i -e "s/process.env.INFURA_PROJECT_ID/'${INFURA_PROJECT_ID}'/g" keys/infura.js
     - sed -i -e "s/process.env.ETHERSCAN_API_KEY/'${ETHERSCAN_KEY}'/g" keys/etherscan.js
     - yarn install
+    - git clone https://github.com/VerusCoin/verus-login-consent-client.git
+    - cd verus-login-consent-client
+    - yarn install
+    - yarn run build
+    - mkdir -p ../assets/plugins/builtin/verus-login-consent-client
+    - cp build/* ../assets/plugins/builtin/verus-login-consent-client
+    - cd ..
+    - rm -rf verus-login-consent-client
   script:
     - export USE_HARD_LINKS=false
     - yarn run dist

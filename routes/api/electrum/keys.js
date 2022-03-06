@@ -1,5 +1,4 @@
-const sha256 = require('js-sha256');
-const buggySha256 = require('sha256');
+const crypto = require('crypto');
 const bigi = require('bigi');
 const bitcoin = require('bitgo-utxo-lib');
 const bs58check = require('bs58check');
@@ -85,15 +84,7 @@ module.exports = (api) => {
   };
 
   api.seedToWif = (seed, network, iguana) => {
-    let bytes;
-
-    // legacy seed edge case
-    if (process.argv.indexOf('spvold=true') > -1) {
-      bytes = buggySha256(seed, { asBytes: true });
-    } else {
-      const hash = sha256.create().update(seed);
-      bytes = hash.array();
-    }
+    let bytes = crypto.createHash('sha256').update(seed).digest()
 
     if (iguana) {
       bytes[0] &= 248;
