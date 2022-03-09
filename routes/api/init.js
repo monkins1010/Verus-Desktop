@@ -32,6 +32,8 @@ module.exports = (api) => {
   }
 
   api.createAgamaDirs = () => {
+    let firstRun = false
+
     if (!_foldersInitRan) {
       const rootLocation = path.join(__dirname, '../../');
 
@@ -49,6 +51,7 @@ module.exports = (api) => {
 
         if (fs.existsSync(api.paths.VerusDesktopDir)) {
           api.log(`created verus desktop main folder at ${api.paths.VerusDesktopDir}`, 'init');
+          firstRun = true;
         }
       } else {
         api.log('verus desktop main folder already exists', 'init');
@@ -144,10 +147,10 @@ module.exports = (api) => {
         api.log('zcashparams folder already exists', 'init');
       }
 
-      // api.compareNSPVCoinsFile();
-
       _foldersInitRan = true;
     }
+
+    return firstRun
   }
 
   api.compareNSPVCoinsFile = () => {

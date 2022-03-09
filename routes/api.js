@@ -104,7 +104,7 @@ api = require('./api/plugin/builtin/authenticator')(api);
 api = require('./api/plugin/builtin/loginconsentui')(api);
 api = require('./api/focus')(api);
 
-api.createAgamaDirs();
+api.firstRun = api.createAgamaDirs();
 api.appConfig = api.loadLocalConfig();
 api.plugins = {
   registry: api.loadLocalPluginRegistry(),
