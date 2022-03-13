@@ -12,8 +12,8 @@ variables:
   VERUSCOIN_VERSION: 0.9.1
   KOMODO_VERSION: 0.7.1
   KOMODO_DOWNLOAD_URL: https://github.com/KomodoPlatform/komodo/releases/download
-  PIRATE_VERSION: 5.4.1
-  PIRATE_DOWNLOAD_URL: https://gitlab.com/piratenetwork_mirror/pirate_compiled/-/raw/main/TreasureChest
+  PIRATE_VERSION: 5.4.2
+  PIRATE_DOWNLOAD_URL: https://github.com/PirateNetwork/pirate/releases/download
   BINARY_SOURCE: VerusCoin
   VERUS_APPIMAGE_X64: Verus-Desktop-v${VERUS_VERSION}-x86_64.AppImage
   VERUS_APPIMAGE_ARM64: Verus-Desktop-v${VERUS_VERSION}-arm64.AppImage
