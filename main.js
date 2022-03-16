@@ -2,6 +2,7 @@ const electron = require('electron');
 const {
 	Menu,
 } = require('electron');
+const { userAgreesToTerms } = require('./routes/children/userAgreement/window');
 const app = electron.app;
 const hasLock = app.requestSingleInstanceLock()
 
@@ -180,13 +181,13 @@ if (!hasLock) {
     app.quit();
   }
 
-  app.on("ready", () => {
+  app.whenReady().then(() => {
     if (!_argv.nogui) {
       startApp()
         .then(() => createMainWindow())
         .catch((e) => api.log(e, "init"));
     } else startApp();
-  });
+  })
 
   function createAppCloseWindow() {
     // initialise window
@@ -302,7 +303,7 @@ if (!hasLock) {
   }
 
   function startApp() {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       // check if agama is already running
       portscanner.checkPortStatus(
         appConfig.general.main.agamaPort,
@@ -310,26 +311,42 @@ if (!hasLock) {
         async (error, status) => {
           // Status is 'open' if currently in use or 'closed' if available
           if (status === "closed") {
-            server.listen(appConfig.general.main.agamaPort, () => {
+            let termsAgreed = appConfig.general.main.agreedToTerms;
+
+            if (!termsAgreed && (await userAgreesToTerms())) {
+              api.agreeToTerms();
+              termsAgreed = true;
+            }
+
+            if (termsAgreed) {
               api.log(
-                `guiapp and sockets.io are listening on port ${appConfig.general.main.agamaPort}`,
+                "user agreed to terms of use",
                 "init"
               );
-            });
 
-            api.setIO(io); // pass sockets object to api router
-            api.setVar("appBasicInfo", appBasicInfo);
-            api.setVar("MasterSecret", MasterSecret);
-            api.setVar("BuiltinSecret", BuiltinSecret);
-
-            api.log("saving plugin builtin secret...", "init");
-            try {
-              await api.saveBuiltinSecret({
-                BuiltinSecret,
+              server.listen(appConfig.general.main.agamaPort, () => {
+                api.log(
+                  `guiapp and sockets.io are listening on port ${appConfig.general.main.agamaPort}`,
+                  "init"
+                );
               });
-            } catch (e) {
-              api.log("error plugin builtin secret!", "init");
-              api.log(e, "init");
+
+              api.setIO(io); // pass sockets object to api router
+              api.setVar("appBasicInfo", appBasicInfo);
+              api.setVar("MasterSecret", MasterSecret);
+              api.setVar("BuiltinSecret", BuiltinSecret);
+
+              api.log("saving plugin builtin secret...", "init");
+              try {
+                await api.saveBuiltinSecret({
+                  BuiltinSecret,
+                });
+              } catch (e) {
+                api.log("error plugin builtin secret!", "init");
+                api.log(e, "init");
+              }
+            } else {
+              app.quit();
             }
           } else {
             openAlreadyRunningWindow();

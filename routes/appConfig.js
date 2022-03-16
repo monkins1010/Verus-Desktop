@@ -58,7 +58,8 @@ const appConfig = {
         alwaysPromptUpdates: true,
         periodicallyCheckUpdates: true,
         encryptApiPost: true,
-        enableDeeplink: false
+        enableDeeplink: false,
+        agreedToTerms: false
       },
       electrum: {
         maxVinParseLimit: 120,

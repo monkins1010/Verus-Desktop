@@ -109,6 +109,21 @@ module.exports = (api) => {
     }
   }
 
+  api.agreeToTerms = () => {
+    const config = api.appConfig 
+    
+    return api.saveLocalAppConf({
+      ...config,
+      general: {
+        ...config.general,
+        main: {
+          ...config.general.main,
+          agreedToTerms: true,
+        },
+      },
+    });
+  }
+
   /*
    *  type: POST
    *  params: configObj

@@ -1,7 +1,7 @@
 {
   "name": "verus-desktop",
   "productName": "Verus-Desktop",
-  "version": "0.9.1",
+  "version": "0.9.1-1",
   "description": "Verus Desktop Wallet App",
   "main": "main.js",
   "scripts": {
@@ -62,7 +62,7 @@
     "body-parser": "1.18.2",
     "buffer-reverse": "1.0.1",
     "coinselect": "github:bitcoinjs/coinselect",
-    "create-hash": "git://github.com/pbca26/createHash#electron-v4",
+    "create-hash": "git+https://github.com/pbca26/createHash#electron-v4",
     "crypto-js": "4.0.0",
     "csv-writer": "1.6.0",
     "ethers": "5.1.0",
