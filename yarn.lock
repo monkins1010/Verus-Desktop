@@ -508,13 +508,6 @@
   resolved "https://registry.yarnpkg.com/@types/debug/-/debug-4.1.5.tgz#b14efa8852b7768d898906613c23f688713e02cd"
   integrity sha512-Q1y515GcOdTHgagaVFhHnIFQ38ygs/kmxdNpvpou+raI9UO3YZcHDngBSYKQklcKlvA7iuQlmIKbzvmxcOE9CQ==
 
-"@types/electron@1.6.10":
-  version "1.6.10"
-  resolved "https://registry.yarnpkg.com/@types/electron/-/electron-1.6.10.tgz#7e87888ed3888767cca68e92772c2c8ea46bc873"
-  integrity sha512-MOCVyzIwkBEloreoCVrTV108vSf8fFIJPsGruLCoAoBZdxtnJUqKA4lNonf/2u1twSjAspPEfmEheC+TLm/cMw==
-  dependencies:
-    electron "*"
-
 "@types/fs-extra@^9.0.1":
   version "9.0.11"
   resolved "https://registry.yarnpkg.com/@types/fs-extra/-/fs-extra-9.0.11.tgz#8cc99e103499eab9f347dbc6ca4e99fb8d2c2b87"
@@ -1711,9 +1704,9 @@ create-hash@^1.1.0, create-hash@^1.1.2, create-hash@^1.2.0:
     ripemd160 "^2.0.1"
     sha.js "^2.4.0"
 
-"create-hash@git://github.com/pbca26/createHash#electron-v4":
+"create-hash@git+https://github.com/pbca26/createHash#electron-v4":
   version "1.2.0"
-  resolved "git://github.com/pbca26/createHash#91bf03096f618d4c146e0fe40365b3bbfd95bc4b"
+  resolved "git+https://github.com/pbca26/createHash#91bf03096f618d4c146e0fe40365b3bbfd95bc4b"
   dependencies:
     cipher-base "^1.0.1"
     inherits "^2.0.1"
@@ -2078,19 +2071,10 @@ electron-rebuild@1.11.0:
     spawn-rx "^3.0.0"
     yargs "^14.2.0"
 
-electron@*:
-  version "15.3.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-15.3.0.tgz#f9803c5a05b2dac12efc6d4203492c7e204b4819"
-  integrity sha512-YLzaKCFmSniNlz9+NUTNs7ssPyDc+bYOCYZ0b/D6DjVkOeIFz4SR8EYKqlOc8TcqlDNu18BbWqz6zbJPyAAURg==
-  dependencies:
-    "@electron/get" "^1.13.0"
-    "@types/node" "^14.6.2"
-    extract-zip "^1.0.3"
-
-electron@16.0.4:
-  version "16.0.4"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-16.0.4.tgz#87dfe21d17608537fc6df292c437362297566a73"
-  integrity sha512-IptwmowvMP1SFOmZLh6rrURwfnOxbDBXBRBcaOdfBM5I+B9mgtdNwzNC3ymFFNzEkZUwdOyg9fu3iyjAAQIQgw==
+electron@16.1.1:
+  version "16.1.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-16.1.1.tgz#21101655b15399f962d78ba38ffb569e79cc0a46"
+  integrity sha512-FahVLQhSMXBDgtFoEb+xSaWyPCbhD+CE2UL5ASVyEgql23WdhfwhkqOvPWkgfZo91HJwama/3AWCakybBky1YA==
   dependencies:
     "@electron/get" "^1.13.0"
     "@types/node" "^14.6.2"
@@ -3957,10 +3941,10 @@ minimatch@^3.0.4:
   dependencies:
     brace-expansion "^1.1.7"
 
-minimist@0.0.8, minimist@1.2.5, minimist@^1.2.0, minimist@^1.2.5:
-  version "1.2.5"
-  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.5.tgz#67d66014b66a6a8aaa0c083c5fd58df4e4e97602"
-  integrity sha512-FM9nNUYrRBAELZQT3xeZQ7fmMOBg6nWNmJKTcgsJeaLstP/UODVpGsr5OhXhhXg6f+qtJ8uiZ+PUxkDWcgIXLw==
+minimist@0.0.8, minimist@1.2.6, minimist@^1.2.0, minimist@^1.2.5:
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/minimist/-/minimist-1.2.6.tgz#8637a5b759ea0d6e98702cfb3a9283323c93af44"
+  integrity sha512-Jsjnk4bw3YJqYzbdyBiNsPWHPfO++UGG749Cxs6peCu5Xg4nrena6OVxOYxrQTqww0Jmwt+Ref8rggumkTLz9Q==
 
 minipass@^2.3.5, minipass@^2.9.0:
   version "2.9.0"
@@ -5903,10 +5887,10 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-systeminformation@5.6.11:
-  version "5.6.11"
-  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.6.11.tgz#f17b43e8197626d90c979536539d6b578a8c53ab"
-  integrity sha512-xdnN8NxeV537ETVytDCBPSqabKHZ+Kk6Vue6LzyvK5MsbqAaJYocIrD3JmTEPeFmFhW25r5RbwenMC9D597eOw==
+systeminformation@5.11.9:
+  version "5.11.9"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.11.9.tgz#95f2334e739dd224178948a2afaced7d9abfdf9d"
+  integrity sha512-eeMtL9UJFR/LYG+2rpeAgZ0Va4ojlNQTkYiQH/xbbPwDjDMsaetj3Pkc+C1aH5G8mav6HvDY8kI4Vl4noksSkA==
 
 tar@4.4.18, tar@^4.4.10, tar@^4.4.12, tar@^4.4.13:
   version "4.4.18"
