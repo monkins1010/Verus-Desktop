@@ -6,7 +6,6 @@ const path = require('path');
 const os = require('os');
 const portscanner = require('portscanner');
 const execFile = require('child_process').execFile;
-const Promise = require('bluebird');
 const md5 = require('agama-wallet-lib/src/crypto/md5');
 
 module.exports = (api) => {

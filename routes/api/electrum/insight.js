@@ -1,6 +1,5 @@
 // const request = require('request');
-// const Promise = require('bluebird');
-
+// 
 // // abstraction layer to communicate with insight explorers
 
 // module.exports = (api) => {

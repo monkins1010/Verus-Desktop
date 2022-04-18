@@ -9,6 +9,11 @@ const hasLock = app.requestSingleInstanceLock()
 if (!hasLock) {
 	app.quit()
 } else {
+  const api = require("./routes/api");
+
+  Object.freeze(Object.prototype);
+  Object.freeze(Object);
+  
   const BrowserWindow = electron.BrowserWindow;
   const path = require("path");
   const os = require("os");
@@ -17,7 +22,6 @@ if (!hasLock) {
   const osPlatform = os.platform();
   const express = require("express");
   const bodyParser = require("body-parser");
-  const Promise = require("bluebird");
   const { formatBytes } = require("agama-wallet-lib/src/utils");
   const { dialog } = require("electron");
   require("@electron/remote/main").initialize();
@@ -25,8 +29,8 @@ if (!hasLock) {
   global.USB_HOME_DIR = path.resolve(__dirname, "./usb_home");
   global.HOME = os.platform() === "win32" ? process.env.APPDATA : process.env.HOME;
 
-  // GUI APP settings and starting gui on address http://120.0.0.1:17777
-  let api = require("./routes/api");
+  api.construct();
+
   const openurlhandler = require("./routes/deeplink/openurlhandler");
 
   api.clearWriteLog();

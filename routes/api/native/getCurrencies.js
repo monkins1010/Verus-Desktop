@@ -1,5 +1,4 @@
 
-const Promise = require('bluebird');
 
 module.exports = (api) => {
   api.native.get_all_currencies = async (coin, query = {}) => {

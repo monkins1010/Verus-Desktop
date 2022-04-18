@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 const { standardizeMiningInfo } = require('../utils/standardization/standardization')
 
 module.exports = (api) => {    

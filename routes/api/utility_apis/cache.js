@@ -4,12 +4,6 @@ const LFUCache = require('../utils/cache');
 const BYTES_PER_MB = 1000000
 
 module.exports = (api) => {
-  api.internal_cache = new LFUCache(
-    !isNaN(api.appConfig.general.main.cacheMbLimit)
-      ? api.appConfig.general.main.cacheMbLimit * BYTES_PER_MB
-      : 10000000
-  )
-
   api.derive_cache_key = (cache, query) => {
     var hash = blake2b(64)
   
@@ -22,33 +16,41 @@ module.exports = (api) => {
     return hash.digest('hex')
   }
 
-  api.main_cache = {
-    del: (cache, query) =>
-      api.internal_cache.del(api.derive_cache_key(cache, query)),
-    set: (cache, query, value) => {
-      try {
-        return api.internal_cache.set(api.derive_cache_key(cache, query), value)
-      } catch(e) {
-        api.log(
-          "Failed to set cache value for the following cache, query, and value, recived the following error.",
-          "main_cache"
-        );
-        api.log(cache, "main_cache")
-        api.log(query, "main_cache")
-        api.log(value, "main_cache")
-        api.log(e, "main_cache")
+  api.initMainCache = () => {
+    api.internal_cache = new LFUCache(
+      !isNaN(api.appConfig.general.main.cacheMbLimit)
+        ? api.appConfig.general.main.cacheMbLimit * BYTES_PER_MB
+        : 10000000
+    )
 
-        return false
-      }
-    },
-    get: (cache, query) =>
-      api.internal_cache.get(api.derive_cache_key(cache, query)),
-    has: (cache, query) =>
-      api.internal_cache.has(api.derive_cache_key(cache, query)),
-    getStats: () => api.internal_cache.getStats(),
-  };
-
-  Object.freeze(api.main_cache);
+    api.main_cache = {
+      del: (cache, query) =>
+        api.internal_cache.del(api.derive_cache_key(cache, query)),
+      set: (cache, query, value) => {
+        try {
+          return api.internal_cache.set(api.derive_cache_key(cache, query), value)
+        } catch(e) {
+          api.log(
+            "Failed to set cache value for the following cache, query, and value, recived the following error.",
+            "main_cache"
+          );
+          api.log(cache, "main_cache")
+          api.log(query, "main_cache")
+          api.log(value, "main_cache")
+          api.log(e, "main_cache")
+  
+          return false
+        }
+      },
+      get: (cache, query) =>
+        api.internal_cache.get(api.derive_cache_key(cache, query)),
+      has: (cache, query) =>
+        api.internal_cache.has(api.derive_cache_key(cache, query)),
+      getStats: () => api.internal_cache.getStats(),
+    };
+  
+    Object.freeze(api.main_cache);
+  }
 
   api.create_sub_cache = (id) => {
     return {

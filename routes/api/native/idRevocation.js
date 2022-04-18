@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 
 module.exports = (api) => {    
   api.native.revoke_id = (coin, name) => {

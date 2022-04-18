@@ -1,5 +1,4 @@
 
-const Promise = require('bluebird');
 const { IS_FRACTIONAL_FLAG, IS_GATEWAY_FLAG } = require('../utils/constants/currency_flags');
 const checkFlag = require('../utils/flags');
 

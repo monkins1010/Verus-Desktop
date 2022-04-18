@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 
 const TX_CONFIRMATION_CACHE_THRESHOLD = 100
 

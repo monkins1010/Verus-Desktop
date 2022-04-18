@@ -1,5 +1,4 @@
 const coinSelect = require('coinselect');
-const Promise = require('bluebird');
 const { transaction } = require('agama-wallet-lib/src/transaction-builder');
 const { fromSats, toSats } = require('agama-wallet-lib/src/utils');
 

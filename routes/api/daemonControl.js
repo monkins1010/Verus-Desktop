@@ -1,7 +1,6 @@
 const fs = require('fs-extra');
 const portscanner = require('portscanner');
 const execFile = require('child_process').execFile;
-const Promise = require('bluebird');
 const { generateRpcPassword } = require('./utils/auth/rpcAuth.js');
 const { canFetchBootstrap } = require('../children/fetch-bootstrap/window.js');
 

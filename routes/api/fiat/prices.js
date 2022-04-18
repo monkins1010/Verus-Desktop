@@ -1,9 +1,10 @@
-const Promise = require('bluebird');
 const { requestJson, requestXml } = require('../utils/request/request')
 const { DOMParser } = require('@xmldom/xmldom');
 const { getCoinObj } = require('../../coinDataTranslated');
 
 module.exports = (api) => {
+  api.fiat = {}
+  
   api.fiat.supportedCurrencies = [
     'AUD',
     'BRL',

@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 
 module.exports = (api) => {
   api.setGet('/electrum/getblockinfo', (req, res, next) => {

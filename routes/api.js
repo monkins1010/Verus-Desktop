@@ -1,21 +1,10 @@
 // TODO: CLEANUP THIS FILE
 const express = require('express');
-const { BuiltinPlugins } = require('./api/utils/plugin/builtin.js');
 let api = express.Router();
 api.rpcCalls = {
   GET: {},
   POST: {}
 }
-
-api = require('./api/auth.js')(api);
-
-api.setconf = require('../private/setconf.js');
-api.nativeCoind = require('./nativeCoind.js');
-api.nativeCoindList = {};
-api.assetChainPorts = require('./ports.js');
-api.assetChainPortsDefault = require('./ports.js');
-api._appConfig = require('./appConfig.js');
-api.chainParams = require('./chainParams')
 
 api.coinsInitializing = {};
 api.startedDaemonRegistry = {};
@@ -81,13 +70,42 @@ api.dpowCoins = require('agama-wallet-lib/src/electrum-servers-dpow');
 
 api.CONNECTION_ERROR_OR_INCOMPLETE_DATA = 'connection error or incomplete data';
 
-api.appConfig = api._appConfig.config;
+api.native = {
+  startParams: {},
+  launchConfigs: {},
+  cache: {
+    tx_cache: {},
+    addr_balance_cache: {},
+    currency_definition_cache: {},
+  }
+};
+
+// eth
+api.eth = {
+  wallet: null,
+  interface: null,
+  temp: {
+    pending_txs: {}
+  }
+};
+
+// erc20
+api.erc20 = {
+  wallet: null,
+  contracts: {}
+}
+
+api.setconf = require('../private/setconf.js');
+api.nativeCoind = require('./nativeCoind.js');
+api.nativeCoindList = {};
+api.assetChainPorts = require('./ports.js');
+api.assetChainPortsDefault = require('./ports.js');
+api._appConfig = require('./appConfig.js');
+api.chainParams = require('./chainParams');
 
 // core
 api = require('./api/paths.js')(api);
-
-api.pathsAgama();
-api.pathsDaemons();
+api = require('./api/auth.js')(api);
 
 // core
 api = require('./api/data_files/jsonFileManager')(api);
@@ -95,7 +113,6 @@ api = require('./api/log.js')(api);
 api = require('./api/config.js')(api);
 api = require('./api/users.js')(api);
 api = require('./api/init.js')(api);
-api = require('./api/utility_apis/checkUpdates')(api);
 api = require('./api/plugin/registry')(api);
 api = require('./api/plugin/install')(api);
 api = require('./api/plugin/start')(api);
@@ -103,62 +120,6 @@ api = require('./api/plugin/stop')(api);
 api = require('./api/plugin/builtin/authenticator')(api);
 api = require('./api/plugin/builtin/loginconsentui')(api);
 api = require('./api/focus')(api);
-
-api.firstRun = api.createAgamaDirs();
-api.appConfig = api.loadLocalConfig();
-api.plugins = {
-  registry: api.loadLocalPluginRegistry(),
-  builtin: BuiltinPlugins
-}
-
-api = require('./api/utility_apis/cache')(api);
-
-api.appConfigSchema = api._appConfig.schema;
-api.defaultAppConfig = Object.assign({}, api.appConfig);
-api.kmdMainPassiveMode = false;
-api.native = {
-  startParams: {},
-  launchConfigs: {},
-  cache: {
-    tx_cache: {},
-    addr_balance_cache: {},
-    currency_definition_cache: api.create_sub_cache("native.cache.currency_definition_cache"),
-  }
-};
-
-api.seed = null;
-
-// prices and price APIs
-api.fiat = {}
-api = require('./api/fiat/prices')(api);
-
-// spv
-api = require('./api/electrum/network.js')(api);
-api = require('./api/electrum/coins.js')(api);
-api = require('./api/electrum/keys.js')(api);
-api = require('./api/electrum/auth.js')(api);
-api = require('./api/electrum/merkle.js')(api);
-api = require('./api/electrum/balances.js')(api);
-api = require('./api/electrum/info.js')(api);
-api = require('./api/electrum/addresses.js')(api);
-api = require('./api/electrum/transactions.js')(api);
-api = require('./api/electrum/parseTxAddresses.js')(api);
-api = require('./api/electrum/block.js')(api);
-api = require('./api/electrum/interest.js')(api);
-api = require('./api/electrum/listunspent.js')(api);
-api = require('./api/electrum/cache.js')(api);
-api = require('./api/electrum/proxy.js')(api);
-api = require('./api/electrum/servers.js')(api);
-api = require('./api/electrum/utils.js')(api);
-api = require('./api/electrum/remove')(api);
-api = require('./api/electrum/send.js')(api);
-api = require('./api/electrum/connectionManager.js')(api);
-
-// init electrum connection manager loop
-api.initElectrumManager();
-
-// nspv
-//api = require('./api/electrum/nspv.js')(api);
 
 // native
 api = require('./api/native/addrBalance.js')(api);
@@ -229,24 +190,33 @@ api = require('./api/dlhandler.js')(api);
 // Utility APIs
 api = require('./api/utility_apis/csvExport.js')(api);
 api = require('./api/utility_apis/pbaas')(api);
+api = require('./api/utility_apis/checkUpdates')(api);
+api = require('./api/utility_apis/cache')(api);
 
 // kv
 api = require('./api/kv.js')(api);
 
-// eth
-api.eth = {
-  wallet: null,
-  interface: null,
-  temp: {
-    pending_txs: {}
-  }
-};
-
-// erc20
-api.erc20 = {
-  wallet: null,
-  contracts: {}
-}
+// spv
+api = require('./api/electrum/network.js')(api);
+api = require('./api/electrum/coins.js')(api);
+api = require('./api/electrum/keys.js')(api);
+api = require('./api/electrum/auth.js')(api);
+api = require('./api/electrum/merkle.js')(api);
+api = require('./api/electrum/balances.js')(api);
+api = require('./api/electrum/info.js')(api);
+api = require('./api/electrum/addresses.js')(api);
+api = require('./api/electrum/transactions.js')(api);
+api = require('./api/electrum/parseTxAddresses.js')(api);
+api = require('./api/electrum/block.js')(api);
+api = require('./api/electrum/interest.js')(api);
+api = require('./api/electrum/listunspent.js')(api);
+api = require('./api/electrum/cache.js')(api);
+api = require('./api/electrum/proxy.js')(api);
+api = require('./api/electrum/servers.js')(api);
+api = require('./api/electrum/utils.js')(api);
+api = require('./api/electrum/remove')(api);
+api = require('./api/electrum/send.js')(api);
+api = require('./api/electrum/connectionManager.js')(api);
 
 api = require('./api/eth/auth.js')(api);
 api = require('./api/eth/keys.js')(api);
@@ -266,32 +236,12 @@ api = require('./api/erc20/coins.js')(api);
 api = require('./api/erc20/send.js')(api);
 api = require('./api/erc20/rfox/migration.js')(api);
 
-api.printDirs();
-
-// default route
-api.setGet('/', (req, res, next) => {
-  res.send('Agama app server2');
-});
-
-// expose sockets obj
-api.setIO = (io) => {
-  api.io = io;
-};
-
-api.setVar = (_name, _body) => {
-  api[_name] = _body;
-};
-
-if (api.appConfig.general.electrum &&
-    api.appConfig.general.electrum.customServers) {
-  api.loadElectrumServersList();
-} else {
-  api.mergeLocalKvElectrumServers();
-}
-
-api.checkCoinConfigIntegrity();
+// prices and price APIs
+api = require('./api/fiat/prices')(api);
 
 // Diagnostic and debugging info
 api = require('./api/diagnostics.js')(api);
+
+api = require('./api/construct')(api);
 
 module.exports = api;

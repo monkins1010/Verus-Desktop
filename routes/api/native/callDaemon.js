@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 const { randomBytes } = require('crypto');
 const {
   RPC_TIMEOUT,

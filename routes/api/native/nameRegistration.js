@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 
 module.exports = (api) => {    
   api.native.register_id_name = (coin, name, referralId, primaryAddress) => {

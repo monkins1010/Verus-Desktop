@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 
 module.exports = (api) => {
   api.setGet('/get_networkfees', (req, res, next) => {

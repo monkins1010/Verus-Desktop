@@ -1,5 +1,4 @@
 const fs = require('fs-extra');
-const Promise = require('bluebird');
 
 module.exports = (api) => {
   api.getMaxconKMDConf = () => {

@@ -1,5 +1,4 @@
 
-const Promise = require('bluebird');
 
 module.exports = (api) => {    
   //TODO: Finish when API call for estimatefee is completed
