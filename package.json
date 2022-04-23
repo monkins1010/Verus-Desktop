@@ -51,7 +51,7 @@
     "@xmldom/xmldom": "0.7.5",
     "agama-wallet-lib": "git+https://github.com/VerusCoin/agama-wallet-lib.git#dev",
     "arch": "2.1.0",
-    "async": "2.6.0",
+    "async": "2.6.4",
     "axios": "0.25.0",
     "base64url": "https://github.com/michaeltout/base64url.git",
     "bigi": "1.4.2",
@@ -73,7 +73,7 @@
     "node-cache": "5.1.2",
     "nodejs-aes256": "1.0.1",
     "passwd-strength": "https://github.com/michaeltout/passwd-strength.git",
-    "portscanner": "2.1.1",
+    "portscanner": "2.2.0",
     "remote-file-size": "3.0.5",
     "semver-compare": "1.0.0",
     "sha256": "0.2.0",
@@ -154,6 +154,7 @@
     }
   },
   "resolutions": {
+    "async": "2.6.4",
     "lodash": "4.17.21",
     "js-yaml": "3.13.1",
     "tar": "4.4.18",
