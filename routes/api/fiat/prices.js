@@ -106,13 +106,15 @@ module.exports = (api) => {
    */
   api.fiat.get_fiatprice = (coin) => {
     return new Promise(async (resolve, reject) => {
-      const coinObj = getCoinObj(coin);
-      const param = api.fiat.coinpaprika_coin_ids[coin]
-        ? api.fiat.coinpaprika_coin_ids[coin]
-        : coin.toLowerCase() + "-" + coinObj.name.replace(/ /g, "-").toLowerCase();
-      const url = `https://api.coinpaprika.com/v1/coins/${param}/ohlcv/today`
+      let url
 
       try {
+        const coinObj = getCoinObj(coin);
+        const param = api.fiat.coinpaprika_coin_ids[coin]
+          ? api.fiat.coinpaprika_coin_ids[coin]
+          : coin.toLowerCase() + "-" + coinObj.name.replace(/ /g, "-").toLowerCase();
+        url = `https://api.coinpaprika.com/v1/coins/${param}/ohlcv/today`
+
         const fiatRates = await api.fiat.get_fiatrates()
 
         const res = await requestJson(
