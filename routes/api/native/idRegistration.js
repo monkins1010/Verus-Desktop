@@ -27,13 +27,17 @@ module.exports = (api) => {
     recoveryauthority,
     privateaddress,
     idFee,
-    referral
+    referral,
+    parent,
+    version
   ) => {
     let idJson = {
       txid,
       namereservation: {
         name,
-        salt
+        salt,
+        parent,
+        version
       },
       identity: {
         name,
@@ -98,7 +102,9 @@ module.exports = (api) => {
     recoveryauthority,
     privateaddress,
     idFee,
-    referral
+    referral,
+    parent,
+    version
   ) => {
     return new Promise((resolve, reject) => {
       resolve({
@@ -112,7 +118,9 @@ module.exports = (api) => {
         privateaddress,
         idFee,
         referral,
-        contentmap
+        contentmap,
+        parent,
+        version
       })
     });
   };
@@ -130,7 +138,9 @@ module.exports = (api) => {
       recoveryauthority,
       privateaddress,
       idFee,
-      referral
+      referral,
+      parent,
+      version
     } = req.body;
 
     api.native
@@ -146,7 +156,9 @@ module.exports = (api) => {
         recoveryauthority,
         privateaddress,
         idFee,
-        referral
+        referral,
+        parent,
+        version
       )
       .then(idObj => {
         const retObj = {
@@ -179,7 +191,9 @@ module.exports = (api) => {
       recoveryauthority,
       privateaddress,
       idFee,
-      referral
+      referral,
+      parent,
+      version
     } = req.body;
 
     api.native
@@ -195,7 +209,9 @@ module.exports = (api) => {
         recoveryauthority,
         privateaddress,
         idFee,
-        referral
+        referral,
+        parent,
+        version
       )
       .then(idRegistryResult => {
         const retObj = {
