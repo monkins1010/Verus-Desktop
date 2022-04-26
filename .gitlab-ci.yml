@@ -83,6 +83,14 @@ build:linux:
     - cp build/* ../assets/plugins/builtin/verus-login-consent-client
     - cd ..
     - rm -rf verus-login-consent-client
+    - git clone https://github.com/VerusCoin/verus-pbaas-visualizer.git
+    - cd verus-pbaas-visualizer
+    - yarn install
+    - yarn run build
+    - mkdir -p ../assets/plugins/builtin/verus-pbaas-visualizer
+    - cp build/* ../assets/plugins/builtin/verus-pbaas-visualizer
+    - cd ..
+    - rm -rf verus-pbaas-visualizer
   script:
     - yarn run dist
   after_script:
@@ -137,6 +145,14 @@ build:linux:arm64:
     - cp build/* ../assets/plugins/builtin/verus-login-consent-client
     - cd ..
     - rm -rf verus-login-consent-client
+    - git clone https://github.com/VerusCoin/verus-pbaas-visualizer.git
+    - cd verus-pbaas-visualizer
+    - yarn install
+    - yarn run build
+    - mkdir -p ../assets/plugins/builtin/verus-pbaas-visualizer
+    - cp build/* ../assets/plugins/builtin/verus-pbaas-visualizer
+    - cd ..
+    - rm -rf verus-pbaas-visualizer
   script:
     - yarn run dist --arm64
   after_script:
@@ -203,6 +219,14 @@ build:windows:
     - cp build/* ../assets/plugins/builtin/verus-login-consent-client
     - cd ..
     - rm -rf verus-login-consent-client
+    - git clone https://github.com/VerusCoin/verus-pbaas-visualizer.git
+    - cd verus-pbaas-visualizer
+    - yarn install
+    - yarn run build
+    - mkdir -p ../assets/plugins/builtin/verus-pbaas-visualizer
+    - cp build/* ../assets/plugins/builtin/verus-pbaas-visualizer
+    - cd ..
+    - rm -rf verus-pbaas-visualizer
   script:
     - yarn run dist-win
   after_script:
@@ -265,6 +289,14 @@ build:mac:
     - cp build/* ../assets/plugins/builtin/verus-login-consent-client
     - cd ..
     - rm -rf verus-login-consent-client
+    - git clone https://github.com/VerusCoin/verus-pbaas-visualizer.git
+    - cd verus-pbaas-visualizer
+    - yarn install
+    - yarn run build
+    - mkdir -p ../assets/plugins/builtin/verus-pbaas-visualizer
+    - cp build/* ../assets/plugins/builtin/verus-pbaas-visualizer
+    - cd ..
+    - rm -rf verus-pbaas-visualizer
   script:
     - export USE_HARD_LINKS=false
     - yarn run dist
