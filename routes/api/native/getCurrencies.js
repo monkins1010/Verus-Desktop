@@ -5,18 +5,35 @@ module.exports = (api) => {
     let allCurrencies = []
 
     if (query.systemtype == null) {
-      const pbaasCurrencies = await api.native.callDaemon(coin, "listcurrencies", [{ ...query, systemtype: "pbaas" }])
+      allCurrencies = await api.native.callDaemon(coin, "listcurrencies", [
+        { ...query, systemtype: "pbaas" },
+      ]);
+
       allCurrencies = [
-        ...pbaasCurrencies,
+        ...allCurrencies,
+        ...(
+          await api.native.callDaemon(coin, "listcurrencies", [{ ...query, systemtype: "local" }])
+        ).filter(
+          (currency) =>
+            !allCurrencies.some(
+              (othercurrency) =>
+                othercurrency.currencydefinition.currencyid ===
+                currency.currencydefinition.currencyid
+            )
+        ),
+      ];
+
+      allCurrencies = [
+        ...allCurrencies,
         ...(
           await api.native.callDaemon(coin, "listcurrencies", [
-            { ...query, systemtype: "local" },
+            { ...query, systemtype: "imported" },
           ])
         ).filter(
           (currency) =>
-            !pbaasCurrencies.some(
-              (pbaasCurrency) =>
-                pbaasCurrency.currencydefinition.currencyid ===
+            !allCurrencies.some(
+              (othercurrency) =>
+                othercurrency.currencydefinition.currencyid ===
                 currency.currencydefinition.currencyid
             )
         ),

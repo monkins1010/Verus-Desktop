@@ -119,6 +119,8 @@ api = require('./api/plugin/start')(api);
 api = require('./api/plugin/stop')(api);
 api = require('./api/plugin/builtin/authenticator')(api);
 api = require('./api/plugin/builtin/loginconsentui')(api);
+api = require('./api/plugin/builtin/pbaasvisualizer')(api);
+
 api = require('./api/focus')(api);
 
 // native
@@ -164,6 +166,7 @@ api = require('./api/native/takeoffer')(api);
 api = require('./api/native/setidentitytimelock')(api);
 api = require('./api/native/exportwallet')(api);
 api = require('./api/native/importwallet')(api);
+api = require('./api/native/getNetworkGraph')(api);
 
 // general network calls
 api.networkFees = {}

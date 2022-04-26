@@ -67,7 +67,8 @@ module.exports = (api) => {
             );
           },
           830,
-          550
+          550,
+          false
         );
       } catch (e) {
         reject(e);
