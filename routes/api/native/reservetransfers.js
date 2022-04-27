@@ -5,15 +5,28 @@ module.exports = (api) => {
       let transfers = []
 
       for (const z_operation of z_operations) {
-        if (z_operation.method === "sendcurrency" && z_operation.params[0].convertto != null) {
-          let from = []
-          let to = []
-          let via = []
+        if (
+          z_operation.method === "sendcurrency" &&
+          (z_operation.params[0].convertto != null || z_operation.params[0].exportto != null)
+        ) {
+          let from = [];
+          let to = [];
+          let via = [];
 
           for (const param of z_operation.params) {
-            from.push(await api.native.callDaemon(chainTicker, 'getcurrency', [param.currency]))
-            to.push(await api.native.callDaemon(chainTicker, 'getcurrency', [param.convertto]))
-            via.push(param.via ? await api.native.callDaemon(chainTicker, 'getcurrency', [param.via]) : null)
+            const ownCurrency = await api.native.callDaemon(chainTicker, "getcurrency", [param.currency])
+            
+            from.push(ownCurrency);
+            to.push(
+              param.convertto != null
+                ? await api.native.callDaemon(chainTicker, "getcurrency", [param.convertto])
+                : ownCurrency
+            );
+            via.push(
+              param.via
+                ? await api.native.callDaemon(chainTicker, "getcurrency", [param.via])
+                : null
+            );
           }
 
           let tx = null;
@@ -21,17 +34,17 @@ module.exports = (api) => {
           try {
             tx = await api.native.callDaemon(chainTicker, "getrawtransaction", [
               z_operation.result.txid,
-              1
+              1,
             ]);
           } catch (e) {}
-          
+
           transfers.push({
             from,
             to,
             via,
             tx,
-            operation: z_operation
-          })
+            operation: z_operation,
+          });
         }
       }
 
