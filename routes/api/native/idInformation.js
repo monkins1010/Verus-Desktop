@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 const { GetOffersRequest } = require('verus-typescript-primitives');
 
 module.exports = (api) => {    

@@ -19,7 +19,7 @@ module.exports = (api) => {
             },
             launch_config: {}
           }, "VERUS_DESKTOP_AUTHENTICATOR_COIN_REQUEST")
-        }, 630, 350)
+        }, 630, 350, false)
       } catch(e) {reject(e)}
     })
   }

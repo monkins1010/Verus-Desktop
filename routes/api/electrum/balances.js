@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 const { checkTimestamp } = require('agama-wallet-lib/src/time');
 const { pubToElectrumScriptHashHex } = require('agama-wallet-lib/src/keys');
 const btcnetworks = require('agama-wallet-lib/src/bitcoinjs-networks');

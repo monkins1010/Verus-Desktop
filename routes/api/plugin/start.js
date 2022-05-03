@@ -9,7 +9,8 @@ module.exports = (api) => {
     onComplete = (data) => {},
     onFinishLoad = (window, id, builtin) => {},
     width = 1280,
-    height = 850
+    height = 850,
+    frame = true
   ) => {
     try {
       let plugin;
@@ -25,7 +26,7 @@ module.exports = (api) => {
       const pluginWindow = new BrowserWindow({
         width,
         height,
-        frame: false,
+        frame,
         icon: plugin.logo,
         show: false,
         title: plugin.name,

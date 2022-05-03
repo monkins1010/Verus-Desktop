@@ -1,5 +1,4 @@
 const async = require('async');
-const Promise = require('bluebird');
 const { hex2str } = require('agama-wallet-lib/src/crypto/utils');
 const { pubToElectrumScriptHashHex } = require('agama-wallet-lib/src/keys');
 const btcnetworks = require('agama-wallet-lib/src/bitcoinjs-networks');

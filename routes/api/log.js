@@ -1,5 +1,4 @@
 const fs = require('fs-extra');
-const Promise = require('bluebird');
 const path = require('path')
 const { secondsToString } = require('agama-wallet-lib/src/time');
 

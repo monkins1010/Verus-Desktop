@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 const { checkTimestamp } = require('agama-wallet-lib/src/time');
 const { requestJson } = require('../../../utils/request/request');
 

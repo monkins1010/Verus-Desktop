@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 const reverse = require('buffer-reverse');
 const crypto = require('crypto');
 const _sha256 = (data) => {

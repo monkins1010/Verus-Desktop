@@ -3,7 +3,8 @@ const path = require('path')
 const ReservedPluginTypes = {
   VERUS_DESKTOP_MAIN: "VERUS_DESKTOP_MAIN",
   VERUS_DESKTOP_AUTHENTICATOR: "VERUS_DESKTOP_AUTHENTICATOR",
-  VERUS_LOGIN_CONSENT_UI: "VERUS_LOGIN_CONSENT_UI"
+  VERUS_LOGIN_CONSENT_UI: "VERUS_LOGIN_CONSENT_UI",
+  VERUS_PBAAS_VISUALIZER: "VERUS_PBAAS_VISUALIZER"
 }
 
 // Builtin plugins have access to all permissions by default
@@ -41,6 +42,21 @@ const BuiltinPlugins = {
       "verus-login-consent-client"
     ),
     devPort: 3001
+  },
+  [ReservedPluginTypes.VERUS_PBAAS_VISUALIZER]: {
+    name: "Visualizer",
+    path: path.join(
+      __dirname,
+      "../",
+      "../",
+      "../",
+      "../",
+      "assets",
+      "plugins",
+      "builtin",
+      "verus-pbaas-visualizer"
+    ),
+    devPort: 3003
   }
 };
 

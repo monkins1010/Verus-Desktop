@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 const {
   RPC_INVALID_ADDRESS_OR_KEY
 } = require("../utils/rpc/rpcStatusCodes");

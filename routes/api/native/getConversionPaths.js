@@ -1,5 +1,4 @@
 
-const Promise = require('bluebird');
 const { IS_FRACTIONAL_FLAG, IS_GATEWAY_FLAG } = require('../utils/constants/currency_flags');
 const checkFlag = require('../utils/flags');
 
@@ -32,6 +31,34 @@ module.exports = (api) => {
           .then(async (paths) => {
             let convertables = {};
 
+            function addConvertable(key, convertable) {
+              if (convertables[key] == null) {
+                convertables[key] = [convertable]
+              } else {
+                convertables[key].push(convertable)
+              }
+            }
+
+            function mergeConvertables(x, y) {
+              const merged = {}
+
+              for (const key in x) {
+                if (y[key]) {
+                  merged[key] = [...x[key], ...y[key]]
+                } else {
+                  merged[key] = x[key]
+                }
+              }
+
+              for (const key in y) {
+                if (!merged[key]) {
+                  merged[key] = y[key]
+                }
+              }
+
+              convertables = merged
+            }
+
             destination_iterator: for (const path of paths) {
               const currencyName = Object.keys(path)[0];
               const parent = await api.native.get_currency_definition(
@@ -46,6 +73,8 @@ module.exports = (api) => {
 
               let pricingCurrencyState;
               let price;
+              let viapriceinroot;
+              let destpriceinvia;
 
               if (via) {
                 if (via.bestcurrencystate) {
@@ -61,6 +90,8 @@ module.exports = (api) => {
                   continue;
                 }
 
+                viapriceinroot = 1 / pricingCurrencyState.currencies[root.currencyid].lastconversionprice
+                destpriceinvia = pricingCurrencyState.currencies[path[currencyName].currencyid].lastconversionprice
                 price =
                   1 /
                   (pricingCurrencyState.currencies[root.currencyid].lastconversionprice /
@@ -80,7 +111,7 @@ module.exports = (api) => {
 
               const gateway = checkFlag(path[currencyName].options, IS_GATEWAY_FLAG)
 
-              convertables[path[currencyName].currencyid] = {
+              addConvertable(path[currencyName].currencyid, {
                 via,
                 destination: {
                   ...path[currencyName],
@@ -97,8 +128,10 @@ module.exports = (api) => {
                   ? path[currencyName].currencyid
                   : via.currencyid,
                 price,
-                gateway
-              };
+                gateway,
+                viapriceinroot,
+                destpriceinvia
+              })
             }
 
             if (fractionalSource && dest == null) {
@@ -106,7 +139,6 @@ module.exports = (api) => {
                 let pricingCurrencyState;
 
                 if (
-                  !convertables[reserve] &&
                   !ignoreCurrencies.includes(reserve)
                 ) {
                   if (via) {
@@ -118,6 +150,8 @@ module.exports = (api) => {
                       ).bestcurrencystate;
                     }
 
+                    viapriceinroot = 1 / pricingCurrencyState.currencies[root.currencyid].lastconversionprice
+                    destpriceinvia = pricingCurrencyState.currencies[reserve].lastconversionprice
                     price =
                       1 /
                       (pricingCurrencyState.currencies[root.currencyid]
@@ -148,7 +182,7 @@ module.exports = (api) => {
 
                   const gateway = checkFlag(_destination.options, IS_GATEWAY_FLAG)
 
-                  convertables[reserve] = {
+                  addConvertable(reserve, {
                     via,
                     destination: _destination,
                     exportto: gateway
@@ -162,32 +196,36 @@ module.exports = (api) => {
                       ? _destination.currencyid
                       : via.currencyid,
                     price,
+                    viapriceinroot,
+                    destpriceinvia,
                     gateway
-                  };
+                  })
                 }
               }
             }
 
             if (includeVia) {
-              for (const key in convertables) {                
-                if (
-                  checkFlag(convertables[key].destination.options, IS_FRACTIONAL_FLAG) &&
-                  !ignoreCurrencies.includes(key) &&
-                  convertables[key].destination.currencies.includes(source.currencyid)
-                ) {
-                  convertables = {
-                    ...convertables,
-                    ...(await api.native.get_conversion_paths(
-                      chain,
-                      convertables[key].destination,
-                      dest,
-                      false,
-                      Object.keys(convertables),
-                      convertables[key].destination,
-                      source
-                    )),
-                  };
-                }
+              for (const key in convertables) {
+                for (const convertablePath of convertables[key]) {
+                  if (
+                    checkFlag(convertablePath.destination.options, IS_FRACTIONAL_FLAG) &&
+                    !ignoreCurrencies.includes(key) &&
+                    convertablePath.destination.currencies.includes(source.currencyid)
+                  ) {
+                    mergeConvertables(
+                      convertables,
+                      await api.native.get_conversion_paths(
+                        chain,
+                        convertablePath.destination,
+                        dest,
+                        false,
+                        ignoreCurrencies,
+                        convertablePath.destination,
+                        source
+                      )
+                    );
+                  }
+                }       
               }
             }
 
@@ -213,19 +251,21 @@ module.exports = (api) => {
   ) => {
     return new Promise(async (resolve, reject) => {
       try {
-        let paths = await api.native.get_conversion_paths_rec(chain, src, dest, includeVia, ignoreCurrencies, via, root)
-        let toDelete;
+        const paths = await api.native.get_conversion_paths_rec(
+          chain,
+          src,
+          dest,
+          includeVia,
+          ignoreCurrencies,
+          via,
+          root
+        );
 
-        for (const key in paths) {
-          if (paths[key].destination.currencyid === src || paths[key].destination.name === src) {
-            toDelete = key
-            break;
-          }
-        }
+        const source = typeof src === "string" ? await api.native.get_currency(chain, src) : src;
+        
+        delete paths[source.currencyid]
 
-        if (toDelete) delete paths[toDelete]
-
-        resolve(paths)
+        resolve(paths);
       } catch(e) {
         reject(e)
       }

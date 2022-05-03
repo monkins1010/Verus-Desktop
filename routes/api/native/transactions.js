@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 
 const PRIVATE_ADDRESSES = 1
 const PUBLIC_TRANSACTIONS = 0

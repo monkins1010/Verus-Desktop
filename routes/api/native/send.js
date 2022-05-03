@@ -65,11 +65,7 @@ module.exports = (api) => {
     let deductedAmount
 
     // Pre-processing for fee purposes
-    if (isSendCurrency) {
-      if (currencyParams.mintnew) {
-        spendAmount = 0
-      }
-      
+    if (isSendCurrency) {      
       if (
         currencyParams.currency != null &&
         currencyParams.convertto != null &&
@@ -80,7 +76,9 @@ module.exports = (api) => {
     } 
 
     deductedAmount = isSendCurrency
-      ? Number(spendAmount.toFixed(8))
+      ? currencyParams.mintnew
+        ? 0
+        : Number(spendAmount.toFixed(8))
       : Number((spendAmount + fee).toFixed(8));
 
     try {

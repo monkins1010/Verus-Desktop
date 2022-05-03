@@ -1,4 +1,3 @@
-const Promise = require('bluebird');
 const fs = require('fs-extra');
 const http = require('http')
 const https = require('https')

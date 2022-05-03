@@ -10,7 +10,7 @@ module.exports = (api) => {
     for (const iAddr in iAddrBalances) {
       const currencyDefinition = await api.native.get_currency_definition(coin, iAddr)
 
-      formattedBalances[currencyDefinition.name] = iAddrBalances[iAddr]
+      formattedBalances[currencyDefinition.fullyqualifiedname] = iAddrBalances[iAddr]
     }
 
     return formattedBalances
@@ -92,9 +92,10 @@ module.exports = (api) => {
         Object.keys(reserve_balances[reserve_balance_key].balance).map(
           (currency) => {
             if (currency.toUpperCase() !== coin.toUpperCase()) {
-              if (balances.reserve[currency] == null)
-              balances.reserve[currency] = getBalanceSchema();
-
+              if (balances.reserve[currency] == null) {
+                balances.reserve[currency] = getBalanceSchema();
+              }
+              
               balances.reserve[currency].public[
                 reserve_balances[reserve_balance_key].key
               ] = reserve_balances[reserve_balance_key].balance[currency];

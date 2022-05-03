@@ -2,7 +2,6 @@
 
 const fs = require('fs-extra');
 const _fs = require('graceful-fs');
-const Promise = require('bluebird');
 const zcashParamsSources = require('../zcashParamsSources')
 
 // TODO: refactor into a loop
