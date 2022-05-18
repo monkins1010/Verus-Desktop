@@ -247,4 +247,6 @@ api = require('./api/diagnostics.js')(api);
 
 api = require('./api/construct')(api);
 
+api = require('./api/verusbridge/verusbridge.js')
+
 module.exports = api;

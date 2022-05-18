@@ -65,7 +65,7 @@
     "csv-writer": "1.6.0",
     "ethers": "5.1.0",
     "ethers-michaeltout": "github:michaeltout/ethersjs-package",
-    "express": "4.16.0",
+    "express": "^4.16.0",
     "fix-path": "2.1.0",
     "fs-extra": "9.1.0",
     "graceful-fs": "4.1.11",
@@ -81,6 +81,7 @@
     "systeminformation": "5.11.9",
     "tx-builder": "^0.18.0",
     "unzipper": "0.10.11",
+    "verus_bridgekeeper": "^1.0.2",
     "verus-typescript-primitives": "https://github.com/VerusCoin/verus-typescript-primitives.git",
     "verus-wallet-endpoints": "https://github.com/VerusCoin/verus-wallet-endpoints.git",
     "wif": "2.0.6"
