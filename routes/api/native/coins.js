@@ -1,4 +1,40 @@
+const { shell, dialog } = require('electron');
+const { VERUS_WIKI_WALLET_BACKUPS } = require("../utils/constants/urls");
+
 module.exports = (api) => {
+  api.ignoreNativeBackup = () => {
+    const config = api.appConfig 
+    
+    api.saveLocalAppConf({
+      ...config,
+      general: {
+        ...config.general,
+        native: {
+          ...config.general.native,
+          remindNativeBackup: false,
+        },
+      },
+    });
+    api.appConfig = api.loadLocalConfig()
+  }
+
+  api.native.remindBackup = async () => {
+    if (api.appConfig.general.native.remindNativeBackup) {
+      const res = await dialog.showMessageBox(null, {
+        type: "info",
+        title: "Backup Your Wallet",
+        message: "Native wallets are stored on a wallet file created in your computer. Make sure to backup your wallet file securely!",
+        buttons: ["Show me how", "OK"],
+      })
+      
+      api.ignoreNativeBackup()
+
+      if (res.response === 0) {
+        shell.openExternal(VERUS_WIKI_WALLET_BACKUPS)
+      }
+    }
+  }
+
   api.native.activateNativeCoin = (
     coin,
     startupOptions = [],
@@ -54,6 +90,7 @@ module.exports = (api) => {
   };
 
   api.native.addCoin = (chainTicker, launchConfig, startupOptions) => {
+    api.native.remindBackup()
     let { daemon, fallbackPort, dirNames, confName, tags } = launchConfig;
 
     let startupParams = [

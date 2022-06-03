@@ -71,6 +71,7 @@ const appConfig = {
         syncServerListFromKv: false
       },
       native: {
+        remindNativeBackup: true,
         passiveMode: false,
         rpc2cli: false,
         cliStopTimeout: 30000,
