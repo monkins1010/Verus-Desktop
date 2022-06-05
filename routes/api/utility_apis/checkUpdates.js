@@ -4,6 +4,7 @@ const {
 const version_json = require('../../../version.json')
 const updateAvailable = require('../../workers/check_update')
 const { dialog } = require('../utils/dialog-shim');
+const { VERUS_DESKTOP_UPDATE_DL } = require('../utils/constants/urls');
 
 module.exports = (api) => {
   api.askingUserAboutUpdate = false
@@ -59,7 +60,7 @@ module.exports = (api) => {
                   buttons: ["OK", "Cancel"]
                 }, (init, checked) => {
                   if (init === 0) {
-                    if (checked) shell.openExternal("https://verus.io/wallet/desktop-wallet")
+                    if (checked) shell.openExternal(VERUS_DESKTOP_UPDATE_DL)
                     else openLink()
                   }
                 })

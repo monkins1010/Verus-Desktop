@@ -12,12 +12,7 @@ module.exports = (api) => {
   }
 
   api.setPost('/native/sendcurrency', async (req, res, next) => {
-    const {
-      from,
-      outputs,
-      feeamount,
-      chainTicker
-    } = req.body;
+    const { from, outputs, feeamount, chainTicker } = req.body;
 
     try {
       res.send(JSON.stringify({
@@ -31,10 +26,12 @@ module.exports = (api) => {
         }), feeamount)
       }));
     } catch (e) {
-      res.send(JSON.stringify({
-        msg: "error",
-        result: e.message
-      }));
+      res.send(
+        JSON.stringify({
+          msg: "error",
+          result: e.message,
+        })
+      );
     }
   });
     

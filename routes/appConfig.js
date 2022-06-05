@@ -95,6 +95,8 @@ const appConfig = {
         excludePrivateTransactions: nonZCoins,
         excludePrivateAddressBalances: nonZCoins,
         stakeGuard: nativeCoinStrings,
+        refundAddress: nativeCoinStrings,
+        refundFromSource: nonZCoins,
         dataDir: nativeCoinStrings
       }
     },
@@ -237,6 +239,16 @@ const appConfig = {
           displayName: "StakeGuard address",
           info:
             "Sapling address for Verus StakeGuard. (Will be used when Verus is started)"
+        },
+        refundAddress: {
+          type: "text_input",
+          displayName: "Refund address",
+          info: "Address where funds are refunded to if a transaction across a PBaaS gateway or for a currency pre-launch does not go through."
+        },
+        refundFromSource: {
+          type: 'checkbox',
+          displayName: 'Use source address for refunds when able',
+          info: 'Sets the refund address to the address where funds were sent from if possible (will override refund address setting if able).',
         },
         dataDir: {
           type: "text_input",
