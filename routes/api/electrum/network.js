@@ -136,7 +136,11 @@ module.exports = (api) => {
 
           api.log(`getServerVersion cached ${`${ip}:${port}:${proto}`} isProtocolV1.4: ${api.electrumServersV1_4[`${ip}:${port}:${proto}`]}`, 'electrum.version.check');
           resolve(api.electrumServersV1_4[`${ip}:${port}:${proto}`]);
-        });
+        })
+        .catch(e => {
+          api.log(`Error getting server version, assuming >1.4`, 'electrum.version.check');
+          resolve(true);
+        })
       }
     });
   };

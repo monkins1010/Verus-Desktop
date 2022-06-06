@@ -71,13 +71,13 @@ const createRecursiveParser = (maxDepth, delimiter) => {
   return recursiveParser;
 }
 
-const createPromiseResult = (resolve, reject) => {
+const createPromiseResult = (resolve, reject, method) => {
   return (err, result) => {
     if (err) {
-      console.log('electrum error:');
+      console.log(`electrum error for ${method}:`);
       console.log(err);
-      resolve(err);
-      // reject(err);
+      //resolve(err);
+      reject(err);
     } else {
       resolve(result);
     }
@@ -206,14 +206,14 @@ class Client {
 
   request(method, params) {
     if (!this.status) {
-      return Promise.reject(new Error('ESOCKET'));
+      return Promise.reject(new Error('Connection error'));
     }
 
     return new Promise((resolve, reject) => {
       const id = ++this.id;
       const content = util.makeRequest(method, params, id);
 
-      this.callbackMessageQueue[id] = util.createPromiseResult(resolve, reject);
+      this.callbackMessageQueue[id] = util.createPromiseResult(resolve, reject, method);
       this.conn.write(`${content}\n`);
     });
   }
@@ -265,7 +265,10 @@ class Client {
   onEnd() {
   }
 
-  onError(e) {
+  onError(e) {    
+    if (e.code && e.code === 'ECONNREFUSED') {
+      this.close()
+    }
   }
 }
 
