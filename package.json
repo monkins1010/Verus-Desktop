@@ -16,7 +16,7 @@
     "postinstall": "rm -rf node_modules/bitgo-utxo-lib/node_modules/create-hash"
   },
   "engines": {
-    "node": ">11"
+    "node": ">13"
   },
   "repository": "https://github.com/VerusCoin/Verus-Desktop/",
   "homepage": "https://veruscoin.io",
