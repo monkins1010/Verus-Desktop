@@ -10,7 +10,7 @@ variables:
   DEFAULT_VERUSCOIN_BRANCH: release
   VERUS_VERSION: 0.9.3
   VERUSCOIN_VERSION: 0.9.3
-  KOMODO_VERSION: 0.7.1
+  KOMODO_VERSION: 0.7.2
   KOMODO_DOWNLOAD_URL: https://github.com/KomodoPlatform/komodo/releases/download
   PIRATE_VERSION: 5.5.0
   PIRATE_DOWNLOAD_URL: https://github.com/PirateNetwork/pirate/releases/download
