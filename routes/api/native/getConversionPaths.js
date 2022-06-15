@@ -132,6 +132,22 @@ module.exports = (api) => {
                 viapriceinroot,
                 destpriceinvia
               })
+
+              // If gateway converter, allow converting to same currency, on current system
+              if (gateway) {
+                addConvertable(path[currencyName].currencyid, {
+                  via,
+                  destination: {
+                    ...path[currencyName],
+                    name: displayName,
+                  },
+                  exportto: null,
+                  price,
+                  gateway: false,
+                  viapriceinroot,
+                  destpriceinvia
+                })
+              }
             }
 
             if (fractionalSource && dest == null) {
@@ -200,6 +216,19 @@ module.exports = (api) => {
                     destpriceinvia,
                     gateway
                   })
+
+                  // If gateway converter, allow converting to same currency, on current system
+                  if (gateway) {
+                    addConvertable(reserve, {
+                      via,
+                      destination: _destination,
+                      exportto: null,
+                      price,
+                      gateway: false,
+                      viapriceinroot,
+                      destpriceinvia
+                    })
+                  }
                 }
               }
             }

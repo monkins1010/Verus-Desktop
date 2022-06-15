@@ -8,11 +8,11 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
   DEFAULT_VERUSCOIN_BRANCH: release
-  VERUS_VERSION: 0.9.2-3
-  VERUSCOIN_VERSION: 0.9.2-3
-  KOMODO_VERSION: 0.7.1
+  VERUS_VERSION: 0.9.3
+  VERUSCOIN_VERSION: 0.9.3
+  KOMODO_VERSION: 0.7.2
   KOMODO_DOWNLOAD_URL: https://github.com/KomodoPlatform/komodo/releases/download
-  PIRATE_VERSION: 5.4.2
+  PIRATE_VERSION: 5.5.0
   PIRATE_DOWNLOAD_URL: https://github.com/PirateNetwork/pirate/releases/download
   BINARY_SOURCE: VerusCoin
   VERUS_APPIMAGE_X64: Verus-Desktop-v${VERUS_VERSION}-x86_64.AppImage
@@ -64,6 +64,7 @@ build:linux:
     - mkdir -p assets/bin/linux64/pirated
     - wget ${KOMODO_DOWNLOAD_URL}/${KOMODO_VERSION}/${KOMODO_CLI_PACKAGE}
     - unzip -p ${KOMODO_CLI_PACKAGE} linux64.tar.gz | tar -xzvf - --strip=1 --directory assets/bin/linux64/komodod
+    - rm assets/bin/linux64/komodod/fetch-params.sh
     - rm ${KOMODO_CLI_PACKAGE}
     - strip --strip-unneeded  assets/bin/linux64/komodod/komodod && strip --strip-unneeded  assets/bin/linux64/komodod/komodo-cli
     - gsutil cp $STAGING/VerusCoin/Zcash/zcashd-linux-x86_64.tar.gz .
@@ -270,7 +271,8 @@ build:mac:
     - tar -xzf Verus-CLI-MacOS-v${VERUSCOIN_VERSION}.tar.gz --strip=1 --directory assets/bin/osx/verusd
     - rm Verus-CLI-MacOS-v${VERUSCOIN_VERSION}.tar.gz
     - wget ${KOMODO_DOWNLOAD_URL}/${KOMODO_VERSION}/${KOMODO_CLI_PACKAGE}
-    - unzip -p ${KOMODO_CLI_PACKAGE} | tar -xzvf - --strip=1 --directory assets/bin/osx/komodod
+    - unzip -j ${KOMODO_CLI_PACKAGE} komodo_${KOMODO_VERSION}_macos/komodod -d assets/bin/osx/komodod
+    - unzip -j ${KOMODO_CLI_PACKAGE} komodo_${KOMODO_VERSION}_macos/komodod -d assets/bin/osx/komodo-cli
     - rm ${KOMODO_CLI_PACKAGE}
     - gsutil cp $STAGING/VerusCoin/Zcash/zcashd-macos.tar.gz .
     - tar -xzvf zcashd-macos.tar.gz --directory assets/bin/osx/

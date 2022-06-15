@@ -6,6 +6,7 @@ const {
   pathsDaemons,
 } = require('../routes/api/pathsUtil');
 const { promptUpdate, generateDiagnosticPacket } = require('../routes/api');
+const { VERUS_DISCORD, VERUS_WIKI } = require('../routes/api/utils/constants/urls')
 
 const template = [
   {
@@ -97,20 +98,13 @@ const template = [
       {
         label: 'Join our Discord',
         click (item, focusedWindow) {
-          shell.openExternal('https://discord.gg/VRKMP2S');
+          shell.openExternal(VERUS_DISCORD);
         }
       },
       {
         label: 'Verus Wiki',
         click (item, focusedWindow) {
-          shell.openExternal('https://wiki.verus.io/#!index.md');
-        }
-      },
-      // ref: https://github.com/sindresorhus/new-github-issue-url
-      {
-        label: 'Add Github issue',
-        click (item, focusedWindow) {
-          shell.openExternal('https://github.com/VerusCoin/Verus-Desktop/issues/new?body=Please+describe+your+issue+in+detail.+Attach+screenshots+if+you+can,+they+help+a+lot.');
+          shell.openExternal(VERUS_WIKI);
         }
       },
       {

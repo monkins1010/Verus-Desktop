@@ -232,6 +232,20 @@ module.exports = (api) => {
     })
   }
 
+  api.native.get_refund_address = (coin, sourceAddr) => {
+    if (
+      api.appConfig.coin.native.refundFromSource[coin] &&
+      sourceAddr != null &&
+      !(sourceAddr[0] === "z" && !fromAddress.includes("@"))
+    ) {
+      return sourceAddr;
+    } else if (api.appConfig.coin.native.refundAddress[coin])
+      return api.appConfig.coin.native.refundAddress[coin];
+    else {
+      return null
+    }
+  };
+
   api.setPost('/native/get_newaddress', (req, res, next) => {
     const zAddress = req.body.zAddress;
     const coin = req.body.chainTicker;
@@ -253,6 +267,27 @@ module.exports = (api) => {
   
       res.send(JSON.stringify(retObj));  
     })
+  });
+
+  api.setPost("/native/get_refund_address", async (req, res, next) => {
+    const coin = req.body.chainTicker;
+    const source = req.body.sourceAddr
+
+    try {
+      res.send(
+        JSON.stringify({
+          msg: "success",
+          result: await api.native.get_refund_address(coin, source),
+        })
+      );
+    } catch (e) {
+      res.send(
+        JSON.stringify({
+          msg: "error",
+          result: e.message,
+        })
+      );
+    }
   });
 
   api.setPost('/native/get_addresses', (req, res, next) => {

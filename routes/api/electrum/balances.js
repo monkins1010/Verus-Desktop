@@ -59,154 +59,195 @@ module.exports = (api) => {
 
   api.electrum.get_balances = (address, coin) => {
     return new Promise(async (resolve, reject) => {
-      const network = api.validateChainTicker(coin);
-      let ecl;
-      let _address = address;
+      try {
+        const network = api.validateChainTicker(coin);
+        let ecl;
+        let _address = address;
 
-      api.log('electrum getbalance =>', 'spv.getbalance');
+        api.log("electrum getbalance =>", "spv.getbalance");
 
-      if (api.electrum.coinData[network.toLowerCase()].nspv) {
-        ecl = api.nspvWrapper(network.toLowerCase());
-      } else {
         ecl = await api.ecl(network);
-        _address = ecl.protocolVersion && ecl.protocolVersion === '1.4' ? pubToElectrumScriptHashHex(address, btcnetworks[network.toLowerCase()] || btcnetworks.kmd) : address;
-      }
-      
-      ecl.blockchainAddressGetBalance(_address)
-      .then((json) => {
-        if (json &&
-            json.hasOwnProperty('confirmed') &&
-            json.hasOwnProperty('unconfirmed')) {
-          if (network === 'komodo' ||
-              network.toLowerCase() === 'kmd') {
-            ecl.blockchainAddressListunspent(_address)
-            .then((utxoList) => {
-              if (utxoList &&
-                  utxoList.length) {
-                // filter out < 10 KMD amounts
-                let _utxo = [];
-                let utxoIssues = false;
-                
-                for (let i = 0; i < utxoList.length; i++) {
-                  api.log(`utxo ${utxoList[i].tx_hash} sats ${utxoList[i].value} value ${Number(utxoList[i].value) * 0.00000001}`, 'spv.getbalance');
+        _address =
+          ecl.protocolVersion && ecl.protocolVersion === "1.4"
+            ? pubToElectrumScriptHashHex(
+                address,
+                btcnetworks[network.toLowerCase()] || btcnetworks.kmd
+              )
+            : address;
 
-                  if (Number(utxoList[i].value) * 0.00000001 >= 10) {
-                    _utxo.push(utxoList[i]);
-                  } else {
-                    utxoIssues = true;
-                  }
-                }
+        ecl
+          .blockchainAddressGetBalance(_address)
+          .then((json) => {
+            if (json && json.hasOwnProperty("confirmed") && json.hasOwnProperty("unconfirmed")) {
+              if (network === "komodo" || network.toLowerCase() === "kmd") {
+                ecl
+                  .blockchainAddressListunspent(_address)
+                  .then((utxoList) => {
+                    if (utxoList && utxoList.length) {
+                      // filter out < 10 KMD amounts
+                      let _utxo = [];
+                      let utxoIssues = false;
 
-                api.log('filtered utxo list =>', 'spv.getbalance');
-                api.log(_utxo, 'spv.getbalance');
+                      for (let i = 0; i < utxoList.length; i++) {
+                        api.log(
+                          `utxo ${utxoList[i].tx_hash} sats ${utxoList[i].value} value ${
+                            Number(utxoList[i].value) * 0.00000001
+                          }`,
+                          "spv.getbalance"
+                        );
 
-                if (_utxo &&
-                    _utxo.length) {
-                  let interestTotal = 0;
+                        if (Number(utxoList[i].value) * 0.00000001 >= 10) {
+                          _utxo.push(utxoList[i]);
+                        } else {
+                          utxoIssues = true;
+                        }
+                      }
 
-                  if (api.electrum.coinData[network.toLowerCase()].nspv) {
-                    let _utxosNspv = [];
-                    
-                    for (let i = 0; i < _utxo.length; i++) {
-                      interestTotal += Number(_utxo[i].rewards);
-                    }
+                      api.log("filtered utxo list =>", "spv.getbalance");
+                      api.log(_utxo, "spv.getbalance");
 
-                    resolve({
-                      confirmed: Number((0.00000001 * json.confirmed).toFixed(8)),
-                      unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
-                      utxoIssues: false,
-                      interest: interestTotal === 0 || interestTotal < 0 ? null : Number((0.00000001 * interestTotal).toFixed(8)),
-                    });
-                  } else {
-                    Promise.all(_utxo.map((_utxoItem, index) => {
-                      return new Promise((resolve, reject) => {
-                        api.getTransaction(_utxoItem.tx_hash, network, ecl)
-                        .then((_rawtxJSON) => {
-                          api.log('electrum gettransaction ==>', 'spv.getbalance');
-                          api.log(`${index} | ${_rawtxJSON.length - 1}`, 'spv.getbalance');
-                          api.log(_rawtxJSON, 'spv.getbalance');
+                      if (_utxo && _utxo.length) {
+                        let interestTotal = 0;
 
-                          // decode tx
-                          const _network = api.getNetworkData(network);
-                          let decodedTx;
+                        if (api.electrum.coinData[network.toLowerCase()].nspv) {
+                          let _utxosNspv = [];
 
-                          if (api.getTransactionDecoded(_utxoItem.tx_hash, network)) {
-                            decodedTx = api.getTransactionDecoded(_utxoItem.tx_hash, network);
-                          } else {
-                            decodedTx = api.electrumJSTxDecoder(
-                              _rawtxJSON,
-                              network,
-                              _network,
-                            );
-                            api.getTransactionDecoded(_utxoItem.tx_hash, network, decodedTx);
+                          for (let i = 0; i < _utxo.length; i++) {
+                            interestTotal += Number(_utxo[i].rewards);
                           }
 
-                          if (decodedTx &&
-                              decodedTx.format &&
-                              decodedTx.format.locktime > 0) {
-                            interestTotal += kmdCalcInterest(
-                              decodedTx.format.locktime,
-                              _utxoItem.value,
-                              _utxoItem.height,
-                              true
-                            );
+                          resolve({
+                            confirmed: Number((0.00000001 * json.confirmed).toFixed(8)),
+                            unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
+                            utxoIssues: false,
+                            interest:
+                              interestTotal === 0 || interestTotal < 0
+                                ? null
+                                : Number((0.00000001 * interestTotal).toFixed(8)),
+                          });
+                        } else {
+                          Promise.all(
+                            _utxo.map((_utxoItem, index) => {
+                              return new Promise((resolve, reject) => {
+                                api
+                                  .getTransaction(_utxoItem.tx_hash, network, ecl)
+                                  .then((_rawtxJSON) => {
+                                    api.log("electrum gettransaction ==>", "spv.getbalance");
+                                    api.log(
+                                      `${index} | ${_rawtxJSON.length - 1}`,
+                                      "spv.getbalance"
+                                    );
+                                    api.log(_rawtxJSON, "spv.getbalance");
 
-                            const _locktimeSec = checkTimestamp(decodedTx.format.locktime * 1000);
-                            const interestRulesCheckPass = !decodedTx.format.locktime || Number(decodedTx.format.locktime) === 0 || _locktimeSec > UTXO_1MONTH_THRESHOLD_SECONDS ? false : true;
-                            
-                            if (!interestRulesCheckPass) {
-                              utxoIssues = true;
-                            }
-                            api.log(`interest ${interestTotal} for txid ${_utxoItem.tx_hash}`, 'interest');
-                          }
+                                    // decode tx
+                                    const _network = api.getNetworkData(network);
+                                    let decodedTx;
 
-                          api.log('decoded tx =>', 'spv.getbalance');
-                          api.log(decodedTx, 'spv.getbalance');
+                                    if (api.getTransactionDecoded(_utxoItem.tx_hash, network)) {
+                                      decodedTx = api.getTransactionDecoded(
+                                        _utxoItem.tx_hash,
+                                        network
+                                      );
+                                    } else {
+                                      decodedTx = api.electrumJSTxDecoder(
+                                        _rawtxJSON,
+                                        network,
+                                        _network
+                                      );
+                                      api.getTransactionDecoded(
+                                        _utxoItem.tx_hash,
+                                        network,
+                                        decodedTx
+                                      );
+                                    }
 
-                          resolve(true);
+                                    if (
+                                      decodedTx &&
+                                      decodedTx.format &&
+                                      decodedTx.format.locktime > 0
+                                    ) {
+                                      interestTotal += kmdCalcInterest(
+                                        decodedTx.format.locktime,
+                                        _utxoItem.value,
+                                        _utxoItem.height,
+                                        true
+                                      );
+
+                                      const _locktimeSec = checkTimestamp(
+                                        decodedTx.format.locktime * 1000
+                                      );
+                                      const interestRulesCheckPass =
+                                        !decodedTx.format.locktime ||
+                                        Number(decodedTx.format.locktime) === 0 ||
+                                        _locktimeSec > UTXO_1MONTH_THRESHOLD_SECONDS
+                                          ? false
+                                          : true;
+
+                                      if (!interestRulesCheckPass) {
+                                        utxoIssues = true;
+                                      }
+                                      api.log(
+                                        `interest ${interestTotal} for txid ${_utxoItem.tx_hash}`,
+                                        "interest"
+                                      );
+                                    }
+
+                                    api.log("decoded tx =>", "spv.getbalance");
+                                    api.log(decodedTx, "spv.getbalance");
+
+                                    resolve(true);
+                                  });
+                              });
+                            })
+                          ).then(() => {
+                            resolve({
+                              confirmed: Number((0.00000001 * json.confirmed).toFixed(8)),
+                              unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
+                              utxoIssues,
+                              interest:
+                                interestTotal === 0 || interestTotal < 0
+                                  ? null
+                                  : Number((0.00000001 * interestTotal).toFixed(8)),
+                            });
+                          });
+                        }
+                      } else {
+                        resolve({
+                          confirmed: Number((0.00000001 * json.confirmed).toFixed(8)),
+                          unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
+                          interest: 0,
                         });
-                      });
-                    }))
-                    .then(() => {
+                      }
+                    } else {
                       resolve({
                         confirmed: Number((0.00000001 * json.confirmed).toFixed(8)),
                         unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
-                        utxoIssues,
-                        interest: interestTotal === 0 || interestTotal < 0 ? null : Number((0.00000001 * interestTotal).toFixed(8))
+                        interest: 0,
                       });
-                    });
-                  }
-                } else {
-                  resolve({
-                    confirmed: Number((0.00000001 * json.confirmed).toFixed(8)),
-                    unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
-                    interest: 0,
-                  });
-                }
+                    }
+                  })
+                  .catch((e) => reject(e));
               } else {
+                api.log("electrum getbalance ==>", "spv.getbalance");
+                api.log(json, "spv.getbalance");
+
                 resolve({
                   confirmed: Number((0.00000001 * json.confirmed).toFixed(8)),
                   unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
-                  interest: 0,
+                  interest: null,
                 });
               }
-            });
-          } else {
-            api.log('electrum getbalance ==>', 'spv.getbalance');
-            api.log(json, 'spv.getbalance');
-
-            resolve({
-              confirmed: Number((0.00000001 * json.confirmed).toFixed(8)),
-              unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),
-              interest: null,
-            })
-          }
-        } else {
-          reject(new Error(api.CONNECTION_ERROR_OR_INCOMPLETE_DATA));
-        }
-      })
-      .catch(e => reject(e));
-    })
+            } else {
+              reject(new Error(api.CONNECTION_ERROR_OR_INCOMPLETE_DATA));
+            }
+          })
+          .catch((e) => {
+            reject(e)
+          });
+      } catch (e) {
+        reject(e);
+      }
+    });
   }
 
   return api;
