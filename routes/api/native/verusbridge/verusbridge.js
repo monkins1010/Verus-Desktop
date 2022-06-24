@@ -1,14 +1,22 @@
 const server = require("verus_bridgekeeper");
 
 module.exports = (api) => { 
+
   api.native.start_bridgekeeper = () => {
     return new Promise((resolve, reject) => {
-      const result = server.start()
-      
-      if(result === true)
-       resolve(result)
-      else
-        reject(result)
+
+      const setupConf = api.native.loadVethConfig();
+
+      if (setupConf !== true) {
+        reject(setupConf);
+      } else {
+        server.start().then((result) => {
+          if(result === true)
+          resolve(result)
+          else
+            reject(result)
+        })
+      }
     })
   };
 
@@ -47,7 +55,7 @@ module.exports = (api) => {
     .catch(error => {
       const retObj = {
         msg: 'error',
-        result: error.message,
+        result: error,
       };
   
       res.send(JSON.stringify(retObj));  
@@ -58,7 +66,7 @@ module.exports = (api) => {
     api.native.stop_bridgekeeper()
     .then((reply) => {
       const retObj = {
-        msg: 'success',
+        msg: 'BridgeKeeper Stopped',
         result: reply,
       };
   
