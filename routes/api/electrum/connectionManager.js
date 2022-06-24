@@ -45,7 +45,12 @@ getProtocolVersion = (_ecl, api) => {
 
       if (process.argv.indexOf('spv-debug') > -1) api.log(`ecl ${`${_ecl.host}:${_ecl.port}:${_ecl.protocol || 'tcp'}`} protocol version: ${protocolVersion}`, 'ecl.manager');
       resolve(protocolVersion);
-    });
+    })
+    .catch(e => {
+      api.log("Failed to get protocol version, assuming 1.4")
+      _ecl.setProtocolVersion("1.4");
+      resolve(1.4);
+    })
   });
 };
 
@@ -85,7 +90,7 @@ module.exports = (api) => {
         if (process.argv.indexOf('spv-debug') > -1) api.log(`ecl conn ${serverStr}`, 'ecl.manager');
         ecl.connect();
         if (process.argv.indexOf('spv-debug') > -1) api.log(`ecl req protocol ${serverStr}`, 'ecl.manager');
-        const eclProtocolVersion = await getProtocolVersion(ecl, api);
+        await getProtocolVersion(ecl, api);
         
         if (!electrumServers[coin]) {
           electrumServers[coin] = {};

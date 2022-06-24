@@ -138,6 +138,14 @@ module.exports = (api) => {
     })
   }
 
+  api.writeAC_Supply = (confFile) => {
+    return new Promise((resolve, reject) => {
+      api.log(`set ac_supply for ${confFile}...`, "native.process");
+      fs.appendFile(confFile, '\nac_supply=5000000000000000')
+          .then(resolve)
+          .catch(e => reject(e))
+    })
+  }
   api.initConfFile = (coin, confName, fallbackPort, ignoreEnoent = false) => {
     const coinLc = coin.toLowerCase()
     return new Promise((resolve, reject) => {
@@ -215,6 +223,7 @@ module.exports = (api) => {
                     api.writeRpcPort(coin, confFile, fallbackPort),
                     api.writeRpcPassword(confFile),
                     api.writeRpcUser(confFile),
+                    api.writeAC_Supply(confFile)
                   ]);
                 } else {
                   return Promise.all([

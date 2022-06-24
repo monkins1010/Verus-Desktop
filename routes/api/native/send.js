@@ -51,8 +51,6 @@ module.exports = (api) => {
     let cliCmd
     let txParams
     let warnings = []
-    let price
-    let conversionValue
     let fromCurrency
     let toCurrency
     let mint = false
@@ -65,7 +63,7 @@ module.exports = (api) => {
     let deductedAmount
 
     // Pre-processing for fee purposes
-    if (isSendCurrency) {      
+    if (isSendCurrency) {  
       if (
         currencyParams.currency != null &&
         currencyParams.convertto != null &&
@@ -81,190 +79,133 @@ module.exports = (api) => {
         : Number(spendAmount.toFixed(8))
       : Number((spendAmount + fee).toFixed(8));
 
-    try {
-      const balances = await api.native.get_balances(chainTicker, false)
-      const { interest } = balances.native.public
+    const balances = await api.native.get_balances(chainTicker, false)
+    const { interest } = balances.native.public
 
-      if (deductedAmount > balance) {
-        if (interest == null || interest == 0) {
-          warnings.push({
-            field: "value",
-            message: `Original amount + est. fee (${deductedAmount}) is larger than balance, amount has been changed.`
-          });
-        }
-        
-        spendAmount = Number((spendAmount - fee).toFixed(8));
-        deductedAmount = Number((spendAmount + fee).toFixed(8));
-      }
-  
-      if (isSendCurrency) {
-        const { currency, convertto, refundto, preconvert, subtractfee, mintnew, via, exportto } = currencyParams
-        cliCmd = "sendcurrency";
-        
-        try {
-          fromCurrency = await api.native.get_currency(
-            chainTicker,
-            currency == null ? chainTicker : currency
-          );
-          
-          if (convertto != null && convertto !== currency) {
-            toCurrency = await api.native.get_currency(chainTicker, convertto)            
-            currentHeight = await api.native.get_info(chainTicker).longestchain
-
-            if (
-              toCurrency.bestcurrencystate != null &&
-              toCurrency.bestcurrencystate.currencies[
-                fromCurrency.currencyid
-              ] != null
-            ) {
-              price = toCurrency.bestcurrencystate.currencies[fromCurrency.currencyid].lastconversionprice;
-              conversionValue = spendAmount * (1 / price)
-            } else if (
-              fromCurrency.bestcurrencystate != null &&
-              fromCurrency.bestcurrencystate.currencies[
-                toCurrency.currencyid
-              ] != null
-            ) {
-              price = 1 / fromCurrency.bestcurrencystate.currencies[toCurrency.currencyid].lastconversionprice;
-              conversionValue = spendAmount * (1 / price)
-            } else {
-              throw new Error(
-                `Conversion between ${toCurrency.name} and ${fromCurrency.name} is not possible.`
-              );
-            }
-          }
-        } catch (e) {
-          api.log("Error while trying to fetch currencies for sendcurrency!", "send")
-          api.log(e, "send")
-
-          throw e
-        }
-        
-        mint = mintnew
-        txParams = [
-          fromAddress == null ? "*" : fromAddress,
-          [{
-            currency,
-            convertto,
-            refundto,
-            preconvert,
-            subtractfee,
-            amount: spendAmount,
-            address: toAddress,
-            memo,
-            mintnew,
-            via,
-            exportto
-          }]
-        ];
-
-        // Extract reserve transfer outputs
-        try {
-          sendCurrencyTest = await api.native.testSendCurrency(chainTicker, txParams)
-        } catch(e) {
-          if (e.message === 'Insufficient funds' && mint) {
-            e.message = `Insufficient funds. To mint coins, ensure that the identity that created this currency (${fromAddress}) has at least a balance of 0.0002 ${chainTicker}.`
-          } else {
-            api.log("Error while testing currency send!", "send")
-            api.log(e, "send")
-            throw e
-          }
-        }
-        // Ensure values from decoded tx match input values
-
-        // TODO: Fix once extractReserveTransfers is moved to 
-        // cryptoConditions.js
-        
-        /*
-        let reserveTransfer = extractReserveTransfers(sendCurrencyTest)[0]
-        
-        if (reserveTransfer == null)
-          throw new Error(
-            "Failed to create and verify reserve transfer transaction."
-          );
-        else if (
-          reserveTransfer.preconvert != preconvert ||
-          (convertto !== currency && !reserveTransfer.convert) || 
-          (toCurrency != null && (toCurrency.currencyid !== reserveTransfer.destinationcurrencyid)) ||
-          (fromCurrency != null && (fromCurrency.currencyid !== reserveTransfer.currencyid))
-        ) {
-          throw new Error(
-            "Failed to verify that sendcurrency input data matches what is going to be sent."
-          );
-        }*/
-      } else if (fromAddress || (toAddress[0] === "z" && toAddress.indexOf('@') === -1)  || customFee != null) {
-        cliCmd = "z_sendmany";
-        if (customFee) fee = customFee;
-        if (!fromAddress) throw new Error("You must specify a from address in a private transaction.")
-  
-        txParams = [
-          fromAddress,
-          [
-            {
-              address: toAddress,
-              amount: spendAmount
-            }
-          ],
-          1,
-          fee
-        ];
-
-        if (memo) {
-          if (toAddress[0] !== 'z') throw new Error("Memos can only be attached to transactions going to z addresses.")
-          txParams[1][0].memo = api.native.encodeMemo(memo);
-        }
-      } else {
-        cliCmd = "sendtoaddress";
-        txParams = [toAddress, spendAmount];
+    if (deductedAmount > balance) {
+      if (interest == null || interest == 0) {
+        warnings.push({
+          field: "value",
+          message: `Original amount + est. fee (${deductedAmount}) is larger than balance, amount has been changed.`
+        });
       }
       
-      let remainingBalance = balance != null && deductedAmount != null ? (balance - deductedAmount).toFixed(8) : 0
-
-      if (remainingBalance < 0) throw new Error("Insufficient funds")
-  
-      if (interest != null && interest > 0) {
-        if (cliCmd !== "sendtoaddress") {
-          warnings.unshift({
-            field: "interest",
-            message:
-              `You have ${interest} ${chainTicker} in unclaimed interest that may be lost if you send this transaction, ` +
-              `claim it first to ensure you do not lose it.`
-          });
-        } else {
-          remainingBalance = (Number(remainingBalance) + (2 * interest)).toFixed(8)
-          deductedAmount -= interest
-        }
-      } 
-
-      return {
-        cliCmd,
-        txParams,
-        chainTicker,
-        to: toAddress,
-        from: mint
-          ? `The "${fromCurrency.name}" Mint (${fromCurrency.name}@)`
-          : fromAddress
-          ? fromAddress
-          : cliCmd === "sendtoaddress" || cliCmd === "sendcurrency"
-          ? "Transparent Funds"
-          : null,
-        balance: balance ? balance.toFixed(8) : balance,
-        value: spendAmount,
-        interest: interest == null || interest == 0 ? null : interest,
-        fee: fee ? fee.toFixed(8) : fee,
-        message: memo,
-        total: deductedAmount ? deductedAmount.toFixed(8) : deductedAmount,
-        remainingBalance,
-        warnings,
-        price,
-        conversionValue,
-        fromCurrency,
-        toCurrency,
-        mint
-      };
-    } catch (e) {
-      throw e
+      spendAmount = Number((spendAmount - fee).toFixed(8));
+      deductedAmount = Number((spendAmount + fee).toFixed(8));
     }
+
+    if (isSendCurrency) {
+      const { currency, convertto, refundto, preconvert, subtractfee, mintnew, via, exportto } = currencyParams
+      cliCmd = "sendcurrency";
+      let finalRefundTo = refundto
+
+      // Refundto is required for txs to different systems
+      if (
+        toAddress.startsWith("0x") &&
+        !toAddress.includes("@") &&
+        (finalRefundTo == null || finalRefundTo.length == 0)
+      ) {
+        finalRefundTo = await api.native.get_refund_address(chainTicker, fromAddress)
+      }
+      
+      mint = mintnew
+      txParams = [
+        fromAddress == null ? "*" : fromAddress,
+        [{
+          currency,
+          convertto,
+          refundto: finalRefundTo,
+          preconvert,
+          subtractfee,
+          amount: spendAmount,
+          address: toAddress,
+          memo,
+          mintnew,
+          via,
+          exportto
+        }]
+      ];
+
+      // Extract reserve transfer outputs
+      try {
+        sendCurrencyTest = await api.native.testSendCurrency(chainTicker, txParams)
+      } catch(e) {
+        if (e.message === 'Insufficient funds' && mint) {
+          e.message = `Insufficient funds. To mint coins, ensure that the identity that created this currency (${fromAddress}) has at least a balance of 0.0002 ${chainTicker}.`
+        } else {
+          api.log("Error while testing currency send!", "send")
+          api.log(e, "send")
+          throw e
+        }
+      }
+    } else if (fromAddress || (toAddress[0] === "z" && toAddress.indexOf('@') === -1)  || customFee != null) {
+      cliCmd = "z_sendmany";
+      if (customFee) fee = customFee;
+      if (!fromAddress) throw new Error("You must specify a from address in a private transaction.")
+
+      txParams = [
+        fromAddress,
+        [
+          {
+            address: toAddress,
+            amount: spendAmount
+          }
+        ],
+        1,
+        fee
+      ];
+
+      if (memo) {
+        if (toAddress[0] !== 'z') throw new Error("Memos can only be attached to transactions going to z addresses.")
+        txParams[1][0].memo = api.native.encodeMemo(memo);
+      }
+    } else {
+      cliCmd = "sendtoaddress";
+      txParams = [toAddress, spendAmount];
+    }
+    
+    let remainingBalance = balance != null && deductedAmount != null ? (balance - deductedAmount).toFixed(8) : 0
+
+    if (remainingBalance < 0) throw new Error("Insufficient funds")
+
+    if (interest != null && interest > 0) {
+      if (cliCmd !== "sendtoaddress") {
+        warnings.unshift({
+          field: "interest",
+          message:
+            `You have ${interest} ${chainTicker} in unclaimed interest that may be lost if you send this transaction, ` +
+            `claim it first to ensure you do not lose it.`
+        });
+      } else {
+        remainingBalance = (Number(remainingBalance) + (2 * interest)).toFixed(8)
+        deductedAmount -= interest
+      }
+    } 
+
+    return {
+      cliCmd,
+      txParams,
+      chainTicker,
+      to: toAddress,
+      from: mint
+        ? `The "${fromCurrency.name}" Mint (${fromCurrency.name}@)`
+        : fromAddress
+        ? fromAddress
+        : cliCmd === "sendtoaddress" || cliCmd === "sendcurrency"
+        ? "Transparent Funds"
+        : null,
+      balance: balance ? balance.toFixed(8) : balance,
+      value: spendAmount,
+      interest: interest == null || interest == 0 ? null : interest,
+      fee: fee ? fee.toFixed(8) : fee,
+      message: memo,
+      total: deductedAmount ? deductedAmount.toFixed(8) : deductedAmount,
+      remainingBalance,
+      warnings,
+      fromCurrency,
+      toCurrency,
+      mint
+    };
   };
 
   api.setPost('/native/sendtx', async (req, res, next) => {
