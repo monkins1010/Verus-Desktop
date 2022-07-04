@@ -1,7 +1,7 @@
 const { standardizeMiningInfo } = require('../utils/standardization/standardization')
 
 module.exports = (api) => {    
-  api.native.get_mininginfo = (coin) => {
+  api.native.get_mininginfo = (coin, includeBridgekeeper) => {
     return new Promise((resolve, reject) => {      
       api.native.callDaemon(coin, 'getmininginfo', [])
       .then(async (mininginfo) => {
@@ -31,8 +31,14 @@ module.exports = (api) => {
           api.log("Could not process mergemining hashrate")
           api.log(e, 'get_mininginfo')
         }
-        
-        resolve(standardizeMiningInfo(mininginfo))
+        let retval = standardizeMiningInfo(mininginfo)
+        if (!includeBridgekeeper) {
+          const bridgeKeeperStatus = await api.native.bridgekeeper_status()
+          if (bridgeKeeperStatus) {
+            retval.bridgekeeperstatus = bridgeKeeperStatus;
+          }
+        }
+        resolve(retval)
       })
       .catch(err => {
         reject(err)
@@ -42,8 +48,8 @@ module.exports = (api) => {
 
   api.setPost('/native/get_mininginfo', (req, res, next) => {
     const coin = req.body.chainTicker;
-
-    api.native.get_mininginfo(coin)
+    const includeBridgekeeper = req.body?.includeBridgekeeper;
+    api.native.get_mininginfo(coin, includeBridgekeeper)
     .then((mininginfo) => {
       const retObj = {
         msg: 'success',

@@ -40,6 +40,17 @@ module.exports = (api) => {
       else
         reject(result)
     })
+  }; 
+
+  api.native.bridgekeeper_setconf = (key, infuraLink, ethContract) => {
+    return new Promise((resolve, reject) => {
+      const result = server.set_conf(key, infuraLink, ethContract)
+      
+      if(result)
+       resolve(result)
+      else
+        reject(result)
+    })
   };
 
   api.setPost('/native/start_bridgekeeper', (req, res, next) => {    
@@ -55,7 +66,7 @@ module.exports = (api) => {
     .catch(error => {
       const retObj = {
         msg: 'error',
-        result: error,
+        result: error.message,
       };
   
       res.send(JSON.stringify(retObj));  
@@ -100,7 +111,29 @@ module.exports = (api) => {
   
       res.send(JSON.stringify(retObj));  
     })
-  });
+  }); 
+
+  api.setPost('/native/bridgekeeper_setconf', (req, res, next) => {   
+    
+    const { key, infuraLink, ethContract } = req.body;
+    api.native.bridgekeeper_setconf(key, infuraLink, ethContract)
+    .then((reply) => {
+      const retObj = {
+        msg: 'success',
+        result: reply,
+      };
+  
+      res.send(JSON.stringify(retObj));  
+    })
+    .catch(error => {
+      const retObj = {
+        msg: 'error',
+        result: error
+      };
+  
+      res.send(JSON.stringify(retObj));  
+    })
+  }); 
 
   return api;
 };
