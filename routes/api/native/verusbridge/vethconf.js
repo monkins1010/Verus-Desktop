@@ -2,6 +2,7 @@ const fs = require('fs-extra');
 const os = require('os');
 const path = require('path');
 var ini = require('ini');
+const fixPath = require('fix-path');
 
 const INIKeys = {
     rpcuser: '',
@@ -37,14 +38,14 @@ const vethFolder = {
 
 const RPCDefault = {
     VRSCTEST: {
-        rpcuser: "empty",
-        rpcpassword: "empty",
+        rpcuser: "user",
+        rpcpassword: "password",
         rpcport: 8000,
-        rpchost: "empty",
+        rpchost: "127.0.0.1",
         upgrademanageraddress: "empty",
         testnet: true,
-        privateKey: "empty",
-        ethNode: "wss://rinkeby.infura.io/ws/v3/..............",
+        privatekey: "empty",
+        ethnode: "empty",
     },
     VRSC: {
         rpcuser: "username",
@@ -74,7 +75,8 @@ module.exports = (api) => {
 
     switch (os.platform()) {
         case 'darwin':
-            confPath = "/Library/Application Support" + pbaasRoot.darwin + pbaasFolder.darwin;
+            fixPath();
+            confPath = `${global.HOME}/Library/Application Support` +  pbaasRoot.darwin + pbaasFolder.darwin;
             break;
         case 'win32':
             confPath = `${global.HOME}` + pbaasRoot.win32 + pbaasFolder.win32;
@@ -95,7 +97,7 @@ module.exports = (api) => {
     } catch (error) {
         if (error.code != 'ENOENT') {
             console.log("Error reading file at: ", confPath + "\nError: " + error.message);
-            return ("Error reading file at: ", confPath + "\nError: " + error.message)
+            return new Error("Error reading file at: ", confPath + "\nError: " + error.message)
         }
     }
 
@@ -111,19 +113,22 @@ module.exports = (api) => {
                     Config[key] = _match[1];
                 } else {
                     console.log("Empty veth.conf file value: ", `${key}:"empty" `);
-                    return("Empty veth.conf file value: ", `${key}:"empty" `)
+                    return new Error("Empty veth.conf file value: " + `${key}:"empty" `)
                 }
             }
         }
         
     } else {
 
-        let err = fs.writeFileSync(confPath + '/' + VETH + '.conf', "", 'utf8');
+        try {
 
-        if (err) {
-            console.log(err, 'Error writing veth.conf', err.message);
-            return(err, 'Error writing veth.conf', err.message);
+        fs.writeFileSync(confPath + '/' + VETH + '.conf', "", 'utf8');
         }
+        catch (e) {
+
+            return new Error('Error writing veth.conf: ', e.message);
+
+        }    
 
         for (const [key, value] of Object.entries(RPCDefault[chaintc])) {
             fs.appendFileSync(confPath + '/' + VETH + '.conf', `${key}=${value}` + "\n");
@@ -134,7 +139,7 @@ module.exports = (api) => {
         const errorMsg = "Please check veth.conf file located at: " + path.normalize(confPath + '/' + VETH + '.conf') +
          "/n" + "Default Values:\n" + JSON.stringify(ini.parse(tempvalues, 'utf-8'))
         console.log(errorMsg);
-        return(errorMsg);
+        return new Error("Please complete the Bridge setup using the gear icon");
     }
     return true;
 
