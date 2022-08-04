@@ -183,6 +183,7 @@
     "follow-redirects": "1.14.8",
     "fresh": "0.5.2",
     "mime": "1.4.1",
-    "json-schema": "0.4.0"
+    "json-schema": "0.4.0",
+    "got": "11.8.5"
   }
 }

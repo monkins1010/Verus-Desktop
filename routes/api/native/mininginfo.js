@@ -33,7 +33,7 @@ module.exports = (api) => {
         }
         let retval = standardizeMiningInfo(mininginfo)
         if (!includeBridgekeeper) {
-          const bridgeKeeperStatus = await api.native.bridgekeeper_status()
+          const bridgeKeeperStatus = await api.native.bridgekeeper_status(coin)
           if (bridgeKeeperStatus) {
             retval.bridgekeeperstatus = bridgeKeeperStatus;
           }
