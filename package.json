@@ -87,7 +87,7 @@
     "wif": "2.0.6"
   },
   "optionalDependencies": {
-    "osx-temperature-sensor": "1.0.4"
+    "osx-temperature-sensor": "1.0.8"
   },
   "build": {
     "appId": "Verus",
