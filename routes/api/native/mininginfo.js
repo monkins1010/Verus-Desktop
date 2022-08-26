@@ -10,12 +10,13 @@ module.exports = (api) => {
           if (mininginfo.mergemining != null && mininginfo.mergemining > 0) {
             const currentCurrency = await api.native.callDaemon(coin, 'getcurrency', [coin])
 
-            if (currentCurrency.currencyid !== currentCurrency.parent) {
-              const parentCurrency = await api.native.callDaemon(
-                coin,
-                "getcurrency",
-                [currentCurrency.parent]
-              );
+            if (
+              currentCurrency.currencyid !== currentCurrency.parent &&
+              currentCurrency.parent != null
+            ) {
+              const parentCurrency = await api.native.callDaemon(coin, "getcurrency", [
+                currentCurrency.parent,
+              ]);
               const parentMiningInfo = await api.native.callDaemon(
                 parentCurrency.name,
                 "getmininginfo",
@@ -23,7 +24,7 @@ module.exports = (api) => {
               );
 
               if (parentMiningInfo.localhashps > 0) {
-                mininginfo.localhashps = parentMiningInfo.localhashps
+                mininginfo.localhashps = parentMiningInfo.localhashps;
               }
             } 
           }
@@ -32,7 +33,7 @@ module.exports = (api) => {
           api.log(e, 'get_mininginfo')
         }
         let retval = standardizeMiningInfo(mininginfo)
-        if (!includeBridgekeeper) {
+        if (includeBridgekeeper) {
           const bridgeKeeperStatus = await api.native.bridgekeeper_status(coin)
           if (bridgeKeeperStatus) {
             retval.bridgekeeperstatus = bridgeKeeperStatus;
