@@ -39,7 +39,7 @@
   "devDependencies": {
     "cross-env": "5.2.1",
     "electron": "16.2.8",
-    "electron-builder": "22.9.1",
+    "electron-builder": "23.3.3",
     "electron-devtools-installer": "2.2.4",
     "electron-rebuild": "1.11.0",
     "tslint": "6.1.3",
