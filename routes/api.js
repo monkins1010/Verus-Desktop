@@ -167,6 +167,8 @@ api = require('./api/native/setidentitytimelock')(api);
 api = require('./api/native/exportwallet')(api);
 api = require('./api/native/importwallet')(api);
 api = require('./api/native/getNetworkGraph')(api);
+api = require('./api/native/verusbridge/verusbridge.js')(api);
+api = require('./api/native/verusbridge/vethconf.js')(api);
 
 // general network calls
 api.networkFees = {}

@@ -138,7 +138,7 @@ const template = [
             type: "info",
             title: "Bootstrap VRSC",
             message:
-              "To bootstrap VRSC, select the 'Bootstrap' checkbox when adding it as a coin in native mode, or select 'Bootstrap' from the VRSC cog menu.",
+              "To bootstrap VRSC, select the 'Bootstrap' checkbox when adding the coin in native mode, or select 'Bootstrap' from the VRSC cog menu located beneath the Verus coin selection in the 'wallet' tab.",
             buttons: ["OK"],
           });
         }

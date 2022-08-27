@@ -1,7 +1,7 @@
 const { standardizeMiningInfo } = require('../utils/standardization/standardization')
 
 module.exports = (api) => {    
-  api.native.get_mininginfo = (coin) => {
+  api.native.get_mininginfo = (coin, includeBridgekeeper) => {
     return new Promise((resolve, reject) => {      
       api.native.callDaemon(coin, 'getmininginfo', [])
       .then(async (mininginfo) => {
@@ -10,12 +10,13 @@ module.exports = (api) => {
           if (mininginfo.mergemining != null && mininginfo.mergemining > 0) {
             const currentCurrency = await api.native.callDaemon(coin, 'getcurrency', [coin])
 
-            if (currentCurrency.currencyid !== currentCurrency.parent) {
-              const parentCurrency = await api.native.callDaemon(
-                coin,
-                "getcurrency",
-                [currentCurrency.parent]
-              );
+            if (
+              currentCurrency.currencyid !== currentCurrency.parent &&
+              currentCurrency.parent != null
+            ) {
+              const parentCurrency = await api.native.callDaemon(coin, "getcurrency", [
+                currentCurrency.parent,
+              ]);
               const parentMiningInfo = await api.native.callDaemon(
                 parentCurrency.name,
                 "getmininginfo",
@@ -23,7 +24,7 @@ module.exports = (api) => {
               );
 
               if (parentMiningInfo.localhashps > 0) {
-                mininginfo.localhashps = parentMiningInfo.localhashps
+                mininginfo.localhashps = parentMiningInfo.localhashps;
               }
             } 
           }
@@ -31,8 +32,14 @@ module.exports = (api) => {
           api.log("Could not process mergemining hashrate")
           api.log(e, 'get_mininginfo')
         }
-        
-        resolve(standardizeMiningInfo(mininginfo))
+        let retval = standardizeMiningInfo(mininginfo)
+        if (includeBridgekeeper) {
+          const bridgeKeeperStatus = await api.native.bridgekeeper_status(coin)
+          if (bridgeKeeperStatus) {
+            retval.bridgekeeperstatus = bridgeKeeperStatus;
+          }
+        }
+        resolve(retval)
       })
       .catch(err => {
         reject(err)
@@ -42,8 +49,8 @@ module.exports = (api) => {
 
   api.setPost('/native/get_mininginfo', (req, res, next) => {
     const coin = req.body.chainTicker;
-
-    api.native.get_mininginfo(coin)
+    const includeBridgekeeper = req.body?.includeBridgekeeper;
+    api.native.get_mininginfo(coin, includeBridgekeeper)
     .then((mininginfo) => {
       const retObj = {
         msg: 'success',

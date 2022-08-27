@@ -1,0 +1,162 @@
+const server = require("verus_bridgekeeper");
+
+module.exports = (api) => { 
+
+  api.native.start_bridgekeeper = (chainTicker) => {
+    return new Promise((resolve, reject) => {
+      if (chainTicker !== "VRSCTEST")
+        reject(new Error("bridgekeeper not currently supported outside of VRSCTEST"));
+
+      const setupConf = api.native.loadVethConfig();
+
+      if (setupConf !== true) {
+        reject(setupConf);
+      } else {
+        server.start().then((result) => {
+          if (result === true) resolve(result);
+          else reject(result);
+        });
+      }
+    });
+  };
+
+  api.native.stop_bridgekeeper = (chainTicker) => {
+    return new Promise((resolve, reject) => {
+      if (chainTicker !== "VRSCTEST")
+        reject(new Error("bridgekeeper not currently supported outside of VRSCTEST"));
+
+      const result = server.stop();
+
+      if (result === true) resolve(result);
+      else reject(result);
+    });
+  };
+
+  api.native.bridgekeeper_status = (chainTicker) => {
+    return new Promise((resolve, reject) => {
+      if (chainTicker !== "VRSCTEST")
+        reject(new Error("bridgekeeper not currently supported outside of VRSCTEST"));
+
+      const result = server.status();
+
+      if (result) resolve(result);
+      else reject(result);
+    });
+  }; 
+
+  api.native.bridgekeeper_setconf = (chainTicker, key, infuraLink, ethContract) => {
+    return new Promise(async (resolve, reject) => {
+      if (chainTicker !== "VRSCTEST")
+        reject(new Error("bridgekeeper not currently supported outside of VRSCTEST"));
+
+      let ethContractAddr;
+
+      if (ethContract == null) {
+        const veth = await api.native.get_currency("VRSCTEST", "VETH");
+        const { nativecurrencyid } = veth
+
+        ethContractAddr = nativecurrencyid.address
+      } else {
+        ethContractAddr = ethContract;
+      }
+
+      const result = server.set_conf(key, infuraLink, ethContractAddr);
+
+      if (result) resolve(result);
+      else reject(result);
+    });
+  };
+
+  api.setPost("/native/start_bridgekeeper", (req, res, next) => {
+    const { chainTicker } = req.body;
+
+    api.native
+      .start_bridgekeeper(chainTicker)
+      .then((reply) => {
+        const retObj = {
+          msg: "success",
+          result: reply,
+        };
+
+        res.send(JSON.stringify(retObj));
+      })
+      .catch((error) => {
+        const retObj = {
+          msg: "error",
+          result: error.message,
+        };
+
+        res.send(JSON.stringify(retObj));
+      });
+  });
+
+  api.setPost("/native/stop_bridgekeeper", (req, res, next) => {
+    const { chainTicker } = req.body;
+
+    api.native
+      .stop_bridgekeeper(chainTicker)
+      .then((reply) => {
+        const retObj = {
+          msg: "BridgeKeeper Stopped",
+          result: reply,
+        };
+
+        res.send(JSON.stringify(retObj));
+      })
+      .catch((error) => {
+        const retObj = {
+          msg: "error",
+          result: error.message,
+        };
+
+        res.send(JSON.stringify(retObj));
+      });
+  });
+
+  api.setPost("/native/bridgekeeper_status", (req, res, next) => {
+    const { chainTicker } = req.body;
+
+    api.native
+      .bridgekeeper_status(chainTicker)
+      .then((reply) => {
+        const retObj = {
+          msg: "success",
+          result: reply,
+        };
+
+        res.send(JSON.stringify(retObj));
+      })
+      .catch((error) => {
+        const retObj = {
+          msg: "error",
+          result: error.message,
+        };
+
+        res.send(JSON.stringify(retObj));
+      });
+  }); 
+
+  api.setPost("/native/bridgekeeper_setconf", (req, res, next) => {
+    const { key, infuraLink, ethContract, chainTicker } = req.body;
+    api.native
+      .bridgekeeper_setconf(chainTicker, key, infuraLink, ethContract)
+      .then((reply) => {
+        const retObj = {
+          msg: "success",
+          result: reply,
+        };
+
+        res.send(JSON.stringify(retObj));
+      })
+      .catch((error) => {
+        const retObj = {
+          msg: "error",
+          result: error,
+        };
+
+        res.send(JSON.stringify(retObj));
+      });
+  }, true); 
+
+  return api;
+};
