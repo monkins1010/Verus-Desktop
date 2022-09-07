@@ -36,6 +36,7 @@ variables:
 ####START####                                            LINUX                                             ####START####
 ########################################################################################################################
 build:linux:
+  tags: [ "Verus Desktop" ]
   image: asherd/agama-builder
   stage: build
   variables:
@@ -94,17 +95,9 @@ build:linux:
     - rm -rf verus-pbaas-visualizer
   script:
     - yarn run dist
-  after_script:
-    - cd dist
-    - gsutil cp ${VERUS_APPIMAGE_X64} $STAGING/Verus-Desktop/$CI_COMMIT_REF_NAME/${VERUS_VERSION}/
-    - curl -F file=@"$VERUS_APPIMAGE_X64"
-      -F channels="$VERUS_POST_CHANNEL"
-      -F initial_comment="${POST_COMMENT}"
-      -H "${SLACK_BOT_AUTH}"
-      "https://slack.com/api/files.upload"
-
 
 build:linux:arm64:
+  tags: [ "Verus Desktop" ]
   image: asherd/agama-builder
   stage: build
   variables:
@@ -156,20 +149,14 @@ build:linux:arm64:
     - rm -rf verus-pbaas-visualizer
   script:
     - yarn run dist --arm64
-  after_script:
-    - cd dist
-    - gsutil cp ${VERUS_APPIMAGE_ARM64} $STAGING/Verus-Desktop/$CI_COMMIT_REF_NAME/${VERUS_VERSION}/
-    - curl -F file=@"$VERUS_APPIMAGE_ARM64"
-      -F channels="$VERUS_POST_CHANNEL"
-      -F initial_comment="${POST_COMMENT}"
-      -H "${SLACK_BOT_AUTH}"
-      "https://slack.com/api/files.upload"
+
 ########################################################################################################################
 ####END####                                              LINUX                                               ####END####
 ########################################################################################################################
 ####START####                                           WINDOWS                                            ####START####
 ########################################################################################################################
 build:windows:
+  tags: [ "Verus Desktop" ]
   stage: build
   image: asherd/agama-builder:windows
   variables:
@@ -230,14 +217,6 @@ build:windows:
     - rm -rf verus-pbaas-visualizer
   script:
     - yarn run dist-win
-  after_script:
-    - cd dist
-    - gsutil cp ${VERUS_WINDOWS_NSIS} $STAGING/Verus-Desktop/$CI_COMMIT_REF_NAME/${VERUS_VERSION}/
-    - curl -F file=@"$VERUS_WINDOWS_NSIS"
-      -F channels="$VERUS_POST_CHANNEL"
-      -F initial_comment="${POST_COMMENT}"
-      -H "${SLACK_BOT_AUTH}"
-      "https://slack.com/api/files.upload"
 
 ########################################################################################################################
 ####END####                                             WINDOWS                                              ####END####
@@ -246,7 +225,7 @@ build:windows:
 ########################################################################################################################
 build:mac:
   stage: build
-  tags: ["Verus Desktop"]
+  tags: ["Big Sur"]
   variables:
     KOMODO_CLI_PACKAGE: komodo_${KOMODO_VERSION}_macos.zip
     PIRATE_CLI_PACKAGE: pirate-cli-MacOS-v${PIRATE_VERSION}.zip
@@ -302,11 +281,3 @@ build:mac:
   script:
     - export USE_HARD_LINKS=false
     - yarn run dist
-  after_script:
-    - cd dist
-    - gsutil cp ${VERUS_MACOS} $STAGING/Verus-Desktop/$CI_COMMIT_REF_NAME/${VERUS_VERSION}/
-    - curl -F file=@"${VERUS_MACOS}"
-      -F channels="${VERUS_POST_CHANNEL}"
-      -F initial_comment="${POST_COMMENT}"
-      -H "${SLACK_BOT_AUTH}"
-      "https://slack.com/api/files.upload"
