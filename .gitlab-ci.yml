@@ -95,6 +95,8 @@ build:linux:
     - rm -rf verus-pbaas-visualizer
   script:
     - yarn run dist
+    - cd dist
+    - gsutil cp ${VERUS_APPIMAGE_X64} $STAGING/Verus-Desktop/$CI_COMMIT_REF_NAME/${VERUS_VERSION}/
 
 build:linux:arm64:
   tags: [ "Verus Desktop" ]
@@ -149,7 +151,8 @@ build:linux:arm64:
     - rm -rf verus-pbaas-visualizer
   script:
     - yarn run dist --arm64
-
+    - cd dist
+    - gsutil cp ${VERUS_APPIMAGE_ARM64} $STAGING/Verus-Desktop/$CI_COMMIT_REF_NAME/${VERUS_VERSION}/
 ########################################################################################################################
 ####END####                                              LINUX                                               ####END####
 ########################################################################################################################
@@ -217,6 +220,8 @@ build:windows:
     - rm -rf verus-pbaas-visualizer
   script:
     - yarn run dist-win
+    - cd dist
+    - gsutil cp ${VERUS_WINDOWS_NSIS} $STAGING/Verus-Desktop/$CI_COMMIT_REF_NAME/${VERUS_VERSION}/
 
 ########################################################################################################################
 ####END####                                             WINDOWS                                              ####END####
@@ -281,3 +286,5 @@ build:mac:
   script:
     - export USE_HARD_LINKS=false
     - yarn run dist
+    - cd dist
+    - gsutil cp ${VERUS_MACOS} $STAGING/Verus-Desktop/$CI_COMMIT_REF_NAME/${VERUS_VERSION}/
