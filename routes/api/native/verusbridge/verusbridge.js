@@ -60,7 +60,7 @@ module.exports = (api) => {
         ethContractAddr = ethContract;
       }
 
-      const result = server.set_conf(key, infuraLink, ethContractAddr);
+      const result = server.set_conf(key, infuraLink, ethContractAddr, chainTicker);
 
       if (result) resolve(result);
       else reject(result);

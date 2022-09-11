@@ -8006,7 +8006,7 @@ verror@^1.10.0:
 
 "verus_bridgekeeper@git+https://github.com/VerusCoin/verus-bridgekeeper.git":
   version "1.0.4"
-  resolved "git+https://github.com/VerusCoin/verus-bridgekeeper.git#9363759fad5001b4b715c6685e91250fedca0530"
+  resolved "git+https://github.com/VerusCoin/verus-bridgekeeper.git#020f00028c66594378eff10312e68a941d4d7db7"
   dependencies:
     axios "0.25.0"
     bitgo-utxo-lib "git+https://github.com/VerusCoin/bitgo-utxo-lib.git"
