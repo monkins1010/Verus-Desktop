@@ -48,7 +48,7 @@
   "dependencies": {
     "@electron/remote": "1.1.0",
     "@ethersproject/signing-key": "5.0.5",
-    "@xmldom/xmldom": "0.7.5",
+    "@xmldom/xmldom": "0.8.3",
     "agama-wallet-lib": "git+https://github.com/VerusCoin/agama-wallet-lib.git#dev",
     "arch": "2.1.0",
     "async": "2.6.4",
@@ -77,8 +77,8 @@
     "remote-file-size": "3.0.5",
     "semver-compare": "1.0.0",
     "sha256": "0.2.0",
-    "socket.io": "4.4.1",
-    "systeminformation": "5.11.9",
+    "socket.io": "4.5.3",
+    "systeminformation": "5.12.10",
     "tx-builder": "^0.18.0",
     "unzipper": "0.10.11",
     "verus-typescript-primitives": "https://github.com/VerusCoin/verus-typescript-primitives.git",
@@ -183,6 +183,7 @@
     "follow-redirects": "1.14.8",
     "fresh": "0.5.2",
     "mime": "1.4.1",
+    "minimatch": "5.1.0",
     "json-schema": "0.4.0",
     "got": "11.8.5"
   }
