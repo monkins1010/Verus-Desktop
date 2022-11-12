@@ -48,7 +48,7 @@
   "dependencies": {
     "@electron/remote": "1.1.0",
     "@ethersproject/signing-key": "5.0.5",
-    "@xmldom/xmldom": "0.8.3",
+    "@xmldom/xmldom": "0.8.4",
     "agama-wallet-lib": "git+https://github.com/VerusCoin/agama-wallet-lib.git#dev",
     "arch": "2.1.0",
     "async": "2.6.4",
