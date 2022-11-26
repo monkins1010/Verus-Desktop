@@ -12,7 +12,7 @@ variables:
   VERUSCOIN_VERSION: 0.9.5-2
   KOMODO_VERSION: 0.7.2
   KOMODO_DOWNLOAD_URL: https://github.com/KomodoPlatform/komodo/releases/download
-  PIRATE_VERSION: 5.5.1
+  PIRATE_VERSION: 5.6.0
   PIRATE_DOWNLOAD_URL: https://github.com/PirateNetwork/pirate/releases/download
   BINARY_SOURCE: VerusCoin
   VERUS_APPIMAGE_X64: Verus-Desktop-v${VERUS_VERSION}-x86_64.AppImage
