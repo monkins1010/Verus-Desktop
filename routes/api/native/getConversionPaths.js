@@ -120,13 +120,13 @@ module.exports = (api) => {
                 exportto: gateway
                   ? path[currencyName].currencyid
                   : (via == null && path[currencyName].systemid === source.systemid) ||
-                    (via != null && path[currencyName].systemid === root.systemid)
+                    (via != null && via.systemid === root.systemid)
                   ? null
                   : via == null
                   ? path[currencyName].currencyid
-                  : via.systemid === source.systemid
-                  ? path[currencyName].currencyid
-                  : via.currencyid,
+                  : via.systemid === root.systemid
+                  ? null
+                  : via.systemid,
                 price,
                 gateway,
                 viapriceinroot,
@@ -204,13 +204,13 @@ module.exports = (api) => {
                     exportto: gateway
                       ? _destination.currencyid
                       : (via == null && _destination.systemid === source.systemid) ||
-                        (via != null && _destination.systemid === root.systemid)
+                        (via != null && via.systemid === root.systemid)
                       ? null
                       : via == null
                       ? _destination.currencyid
-                      : via.systemid === source.systemid
-                      ? _destination.currencyid
-                      : via.currencyid,
+                      : via.systemid === root.systemid
+                      ? null
+                      : via.systemid,
                     price,
                     viapriceinroot,
                     destpriceinvia,
