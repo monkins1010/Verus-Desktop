@@ -912,7 +912,7 @@ aes-js@3.0.0:
 
 "agama-wallet-lib@git+https://github.com/VerusCoin/agama-wallet-lib.git#dev":
   version "0.3.4"
-  resolved "git+https://github.com/VerusCoin/agama-wallet-lib.git#532d4d5566b1b2e73d7f706084ceefdc624736cf"
+  resolved "git+https://github.com/VerusCoin/agama-wallet-lib.git#c68ba44fa85e0069863bf11087ca25b8a5b5c5bb"
   dependencies:
     bigi "^1.4.2"
     bip32 "^1.0.2"
@@ -1380,7 +1380,7 @@ bitcoinjs-message@^2.1.0:
 
 "bitgo-utxo-lib@git+https://github.com/VerusCoin/bitgo-utxo-lib.git":
   version "1.5.0"
-  resolved "git+https://github.com/VerusCoin/bitgo-utxo-lib.git#2d35757b7d4e611cf8d02440f6f1fec4da3a080b"
+  resolved "git+https://github.com/VerusCoin/bitgo-utxo-lib.git#a5bfb062cbc074866d60a297a71dc002cf7563ee"
   dependencies:
     bech32 "0.0.3"
     bigi "^1.4.0"
@@ -8030,7 +8030,7 @@ verror@^1.10.0:
 
 "verus_bridgekeeper@git+https://github.com/VerusCoin/verusbridgekeeper.git":
   version "1.0.5"
-  resolved "git+https://github.com/VerusCoin/verusbridgekeeper.git#31f02a6f1bf29ac564549503ae048fb22cd4dccd"
+  resolved "git+https://github.com/VerusCoin/verusbridgekeeper.git#0278dc4c0d36664e31e403b51715ce16bdc99388"
   dependencies:
     axios "0.25.0"
     bitgo-utxo-lib "git+https://github.com/VerusCoin/bitgo-utxo-lib.git"
