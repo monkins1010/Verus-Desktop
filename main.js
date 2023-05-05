@@ -13,7 +13,7 @@ if (!hasLock) {
 
   Object.freeze(Object.prototype);
   Object.freeze(Object);
-  
+
   const BrowserWindow = electron.BrowserWindow;
   const path = require("path");
   const os = require("os");
@@ -447,6 +447,7 @@ if (!hasLock) {
         safeDialogs: true,
         webSecurity: true,
         webviewTag: false,
+        sandbox: false,
 
         preload: path.resolve(__dirname, "routes", "preloads", "plugin", "preload-builtin.js"),
       },
@@ -565,7 +566,7 @@ if (!hasLock) {
     api.log("removing deeplink", "init");
     removelink(app)
   }
- 
+
   app.on("open-url", (event, url) => openurlhandler(event, url, api.dlhandler));
 
   // Emitted when all windows have been closed and the application will quit.
