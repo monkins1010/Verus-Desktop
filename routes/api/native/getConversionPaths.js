@@ -67,7 +67,7 @@ module.exports = (api) => {
               );
               const displayName =
                 path[currencyName].systemid === path[currencyName].currencyid ||
-                path[currencyName].parent === "iJhCezBExJHvtyH3fGhNnt2NhU4Ztkf2yq"
+                path[currencyName].parent === "i5w5MuNik5NtLcYmNzcvaoixooEebB6MGV"
                   ? currencyName
                   : `${currencyName}.${parent.name}`;
 
