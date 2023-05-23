@@ -29,10 +29,10 @@ const pbaasRootOptions = {
 };
 
 const vethFolder = {
-  "000b090bec6c9ff28586eb7ed24e77562f0c4667": {
-    darwin: "/pbaas/000b090bec6c9ff28586eb7ed24e77562f0c4667",
-    linux: "/pbaas/000b090bec6c9ff28586eb7ed24e77562f0c4667",
-    win32: "/pbaas/000b090bec6c9ff28586eb7ed24e77562f0c4667",
+  "52c7a71ed15802d33778235e7988d61339b84c45": {
+    darwin: "/pbaas/52c7a71ed15802d33778235e7988d61339b84c45",
+    linux: "/pbaas/52c7a71ed15802d33778235e7988d61339b84c45",
+    win32: "/pbaas/52c7a71ed15802d33778235e7988d61339b84c45",
   },
 };
 
@@ -61,9 +61,9 @@ const RPCDefault = {
 
 module.exports = (api) => {
   api.native.loadVethConfig = () => {
-    const VETH = "000b090bec6c9ff28586eb7ed24e77562f0c4667";
+    const VETH = "52c7a71ed15802d33778235e7988d61339b84c45";
 
-    let chaintc = "VRSCTEST"; //chainName.toUpperCase();
+    let chaintc = "VRSC"; //chainName.toUpperCase();
 
     let Config = INIKeys;
     const pbaasFolder = vethFolder[VETH];

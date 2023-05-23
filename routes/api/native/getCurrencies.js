@@ -72,7 +72,7 @@ module.exports = (api) => {
         ...currency.currencydefinition,
         name:
           (currencyid === systemid ||
-          parent === "iJhCezBExJHvtyH3fGhNnt2NhU4Ztkf2yq")
+          parent === "i5w5MuNik5NtLcYmNzcvaoixooEebB6MGV")
             ? name
             : `${name}.${systemname}`,
         bestheight: currency.bestheight,

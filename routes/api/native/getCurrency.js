@@ -1,7 +1,7 @@
 module.exports = (api) => {
   // The only difference between this and get_currency is that this cannot
   // be used to derive non-static properties of a currency like bestcurrencystate
-  api.native.get_currency_definition = async (chain, currencyid = "iJhCezBExJHvtyH3fGhNnt2NhU4Ztkf2yq") => {
+  api.native.get_currency_definition = async (chain, currencyid = "i5w5MuNik5NtLcYmNzcvaoixooEebB6MGV") => {
     if (api.native.cache.currency_definition_cache.has(currencyid)) {
       return api.native.cache.currency_definition_cache.get(currencyid)
     } else {
@@ -10,7 +10,7 @@ module.exports = (api) => {
 
       if (
         definition.currencyid !== definition.systemid &&
-        definition.parent !== "iJhCezBExJHvtyH3fGhNnt2NhU4Ztkf2yq"
+        definition.parent !== "i5w5MuNik5NtLcYmNzcvaoixooEebB6MGV"
       ) {
         name = `${name}.${
           (await api.native.get_currency_definition(chain, definition.parent))
@@ -28,7 +28,7 @@ module.exports = (api) => {
     }
   }
 
-  api.native.get_currency = async (chain, currencyid = "iJhCezBExJHvtyH3fGhNnt2NhU4Ztkf2yq") => {
+  api.native.get_currency = async (chain, currencyid = "i5w5MuNik5NtLcYmNzcvaoixooEebB6MGV") => {
     try {
       const currencyObject = await api.native.callDaemon(chain, 'getcurrency', [currencyid])
       const parent = await api.native.get_currency_definition(chain, currencyObject.parent)
@@ -41,7 +41,7 @@ module.exports = (api) => {
         spotterid: spotter.currencyid,
         name:
           (currencyObject.systemid !== currencyObject.currencyid &&
-          currencyObject.parent !== "iJhCezBExJHvtyH3fGhNnt2NhU4Ztkf2yq")
+          currencyObject.parent !== "i5w5MuNik5NtLcYmNzcvaoixooEebB6MGV")
             ? `${currencyObject.name}.${parent.name}`
             : currencyObject.name,
       };
