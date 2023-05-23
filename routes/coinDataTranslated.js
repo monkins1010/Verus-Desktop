@@ -147,7 +147,7 @@ var getCoinObj = function getCoinObj(chainTicker) {
         );
     } // Determine if chain is pbaas compatible, and if it is a pbaas root chain
 
-    if (isPbaas || chainTickerUc === "VRSCTEST") {
+    if (isPbaas || chainTickerUc === "VRSC") {
       var _tags2;
 
       tags = ((_tags2 = {
