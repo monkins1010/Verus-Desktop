@@ -116,7 +116,7 @@ module.exports = (api) => {
         api.log('Update error! Failed to check for updates:', 'update')
         api.log(e, 'update')
         api.askingUserAboutUpdate = false
-        reject(e)
+        resolve();
       })
     })
   }

@@ -109,13 +109,25 @@ module.exports = (api) => {
       let url
 
       try {
+        const fiatRates = await api.fiat.get_fiatrates()
+
+        if (coin === "VRSCTEST") {
+          const results = {'USD': 0}
+
+          Object.keys(fiatRates.result).map(fiatCurrency => {
+            results[fiatCurrency] = 0
+          })
+
+          return new Promise((resolve) => resolve(results))
+        }
+
         const coinObj = getCoinObj(coin);
         const param = api.fiat.coinpaprika_coin_ids[coin]
           ? api.fiat.coinpaprika_coin_ids[coin]
           : coin.toLowerCase() + "-" + coinObj.name.replace(/ /g, "-").toLowerCase();
         url = `https://api.coinpaprika.com/v1/coins/${param}/ohlcv/today`
 
-        const fiatRates = await api.fiat.get_fiatrates()
+        
 
         const res = await requestJson(
           "GET",
