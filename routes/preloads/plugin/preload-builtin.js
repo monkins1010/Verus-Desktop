@@ -30,7 +30,7 @@ contextBridge.exposeInMainWorld("bridge", {
   },
   assetChainPorts,
   appBasicInfo: {
-    name: "Verus Desktop",
+    name: "Verus Desktop Testnet",
     mode: global.USB_MODE ? "usb" : "standard",
     version: version.version,
   },

@@ -15,11 +15,11 @@ variables:
   PIRATE_VERSION: 5.6.0
   PIRATE_DOWNLOAD_URL: https://github.com/PirateNetwork/pirate/releases/download
   BINARY_SOURCE: VerusCoin
-  VERUS_APPIMAGE_X64: Verus-Desktop-v${VERUS_VERSION}-x86_64.AppImage
-  VERUS_APPIMAGE_ARM64: Verus-Desktop-v${VERUS_VERSION}-arm64.AppImage
-  VERUS_WINDOWS_ZIP: Verus-Desktop-Windows-v${VERUS_VERSION}.zip
-  VERUS_WINDOWS_NSIS: Verus-Desktop-v${VERUS_VERSION}.exe
-  VERUS_MACOS: Verus-Desktop-v${VERUS_VERSION}.dmg
+  VERUS_APPIMAGE_X64: Verus-Desktop-Testnet-v${VERUS_VERSION}-x86_64.AppImage
+  VERUS_APPIMAGE_ARM64: Verus-Desktop-Testnet-v${VERUS_VERSION}-arm64.AppImage
+  VERUS_WINDOWS_ZIP: Verus-Desktop-Testnet-Windows-v${VERUS_VERSION}.zip
+  VERUS_WINDOWS_NSIS: Verus-Desktop-Testnet-v${VERUS_VERSION}.exe
+  VERUS_MACOS: Verus-Desktop-Testnet-v${VERUS_VERSION}.dmg
   GIT_SUBMODULE_STRATEGY: recursive
   POST_COMMENT: "Pipeline Trigger: ${CI_PIPELINE_SOURCE}\n
       Branch: ${CI_COMMIT_REF_NAME}\n

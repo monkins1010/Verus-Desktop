@@ -44,7 +44,7 @@ if (!hasLock) {
   const { appConfig } = api;
 
   const appBasicInfo = {
-    name: "Verus Desktop",
+    name: "Verus Desktop Testnet",
     mode: "standard",
     version: version.version,
   };
