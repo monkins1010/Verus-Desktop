@@ -56,9 +56,16 @@ module.exports = (api) => {
     let mint = false
 
     let isSendCurrency = currencyParams != null && currencyParams.currency != null;
+    let isNativeSend = false;
+
+    if (isSendCurrency) {
+      const fromCurrencyObj = await api.native.get_currency(chainTicker, currencyParams.currency)
+
+      isNativeSend = chainTicker.toUpperCase() === fromCurrencyObj.name.toUpperCase()
+    }
 
     //TODO: Change for sendcurrency to account for 0.25% fee
-    let fee = isSendCurrency ? 0.0003 : 0.0001
+    let fee = isSendCurrency && !isNativeSend ? 0.0003 : 0.0001
     let spendAmount = amount
     let deductedAmount
 
@@ -73,7 +80,7 @@ module.exports = (api) => {
       }
     } 
 
-    deductedAmount = isSendCurrency
+    deductedAmount = isSendCurrency && !isNativeSend
       ? currencyParams.mintnew
         ? 0
         : Number(spendAmount.toFixed(8))
@@ -128,7 +135,7 @@ module.exports = (api) => {
 
       // Extract reserve transfer outputs
       try {
-        sendCurrencyTest = await api.native.testSendCurrency(chainTicker, txParams)
+        await api.native.testSendCurrency(chainTicker, txParams)
       } catch(e) {
         if (e.message === 'Insufficient funds' && mint) {
           e.message = `Insufficient funds. To mint coins, ensure that the identity that created this currency (${fromAddress}) has at least a balance of 0.0002 ${chainTicker}.`
