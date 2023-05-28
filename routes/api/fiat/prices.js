@@ -111,7 +111,7 @@ module.exports = (api) => {
       try {
         const fiatRates = await api.fiat.get_fiatrates()
 
-        if (coin === "VRSCTEST") {
+        if (coin === "VRSCTEST" || api.is_pbaas(coin)) {
           const results = {'USD': 0}
 
           Object.keys(fiatRates.result).map(fiatCurrency => {
