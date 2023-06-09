@@ -8,9 +8,9 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
   DEFAULT_VERUSCOIN_BRANCH: release
-  VERUS_VERSION: 1.0.7
-  VERUSCOIN_VERSION: 1.0.7
-  KOMODO_VERSION: 0.7.2
+  VERUS_VERSION: 1.0.8
+  VERUSCOIN_VERSION: 1.0.8
+  KOMODO_VERSION: 0.8.0
   KOMODO_DOWNLOAD_URL: https://github.com/KomodoPlatform/komodo/releases/download
   PIRATE_VERSION: 5.6.0
   PIRATE_DOWNLOAD_URL: https://github.com/PirateNetwork/pirate/releases/download
@@ -63,11 +63,11 @@ build:linux:
     - rm Verus-CLI-Linux-v${VERUSCOIN_VERSION}-x86_64.tar.gz
     - mkdir -p assets/bin/linux64/komodod
     - mkdir -p assets/bin/linux64/pirated
-    - wget ${KOMODO_DOWNLOAD_URL}/${KOMODO_VERSION}/${KOMODO_CLI_PACKAGE}
-    - unzip -p ${KOMODO_CLI_PACKAGE} linux64.tar.gz | tar -xzvf - --strip=1 --directory assets/bin/linux64/komodod
-    - rm assets/bin/linux64/komodod/fetch-params.sh
+    - wget ${KOMODO_DOWNLOAD_URL}/v${KOMODO_VERSION}/${KOMODO_CLI_PACKAGE}
+    - unzip -j ${KOMODO_CLI_PACKAGE} komodod -d assets/bin/linux64/komodod
+    - unzip -j ${KOMODO_CLI_PACKAGE} komodo-cli -d assets/bin/linux64/komodod
+    - unzip -j ${KOMODO_CLI_PACKAGE} wallet-utility -d assets/bin/linux64/komodod
     - rm ${KOMODO_CLI_PACKAGE}
-    - strip --strip-unneeded  assets/bin/linux64/komodod/komodod && strip --strip-unneeded  assets/bin/linux64/komodod/komodo-cli
     - gsutil cp $STAGING/VerusCoin/Zcash/zcashd-linux-x86_64.tar.gz .
     - tar -xzvf zcashd-linux-x86_64.tar.gz --directory assets/bin/linux64/
     - rm zcashd-linux-x86_64.tar.gz
@@ -182,12 +182,10 @@ build:windows:
     - cd ../../..
     - mkdir -p assets/bin/win64/komodod
     - mkdir -p assets/bin/win64/pirated
-    - wget ${KOMODO_DOWNLOAD_URL}/${KOMODO_VERSION}/${KOMODO_CLI_PACKAGE}
-    - unzip ${KOMODO_CLI_PACKAGE}
-    - unzip win64.zip
-    - mv win64/komodod.exe win64/komodo-cli.exe assets/bin/win64/komodod
-    - strip --strip-unneeded  assets/bin/win64/komodod/komodod.exe && strip --strip-unneeded  assets/bin/win64/komodod/komodo-cli.exe
-    - rm -rf win64 win64.zip
+    - wget ${KOMODO_DOWNLOAD_URL}/v${KOMODO_VERSION}/${KOMODO_CLI_PACKAGE}
+    - unzip -j ${KOMODO_CLI_PACKAGE} komodod.exe -d assets/bin/win64/komodod
+    - unzip -j ${KOMODO_CLI_PACKAGE} komodo-cli.exe -d assets/bin/win64/komodod
+    - unzip -j ${KOMODO_CLI_PACKAGE} wallet-utility.exe -d assets/bin/win64/komodod
     - rm ${KOMODO_CLI_PACKAGE}
     - gsutil cp $STAGING/$VERUS_CLI_WINDOWS .
     - unzip -qq Verus-CLI-Windows-v${VERUSCOIN_VERSION}.zip -d assets/bin/win64
@@ -254,9 +252,10 @@ build:mac:
     - mkdir -p assets/bin/osx/pirated
     - tar -xzf Verus-CLI-MacOS-v${VERUSCOIN_VERSION}.tar.gz --strip=1 --directory assets/bin/osx/verusd
     - rm Verus-CLI-MacOS-v${VERUSCOIN_VERSION}.tar.gz
-    - wget ${KOMODO_DOWNLOAD_URL}/${KOMODO_VERSION}/${KOMODO_CLI_PACKAGE}
-    - unzip -j ${KOMODO_CLI_PACKAGE} komodo_${KOMODO_VERSION}_macos/komodod -d assets/bin/osx/komodod
-    - unzip -j ${KOMODO_CLI_PACKAGE} komodo_${KOMODO_VERSION}_macos/komodod -d assets/bin/osx/komodo-cli
+    - wget ${KOMODO_DOWNLOAD_URL}/v${KOMODO_VERSION}/${KOMODO_CLI_PACKAGE}
+    - unzip -j ${KOMODO_CLI_PACKAGE} komodod -d assets/bin/osx/komodod
+    - unzip -j ${KOMODO_CLI_PACKAGE} komodo-cli -d assets/bin/osx/komodod
+    - unzip -j ${KOMODO_CLI_PACKAGE} wallet-utility -d assets/bin/osx/komodod
     - rm ${KOMODO_CLI_PACKAGE}
     - gsutil cp $STAGING/VerusCoin/Zcash/zcashd-macos.tar.gz .
     - tar -xzvf zcashd-macos.tar.gz --directory assets/bin/osx/
