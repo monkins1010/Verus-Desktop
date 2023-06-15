@@ -1,7 +1,7 @@
 {
   "name": "verus-desktop",
   "productName": "Verus-Desktop",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Verus Desktop Wallet App",
   "main": "main.js",
   "scripts": {
@@ -155,6 +155,7 @@
   },
   "resolutions": {
     "async": "2.6.4",
+    "blake2b-wasm": "https://github.com/michaeltout/blake2b-wasm",
     "lodash": "4.17.21",
     "js-yaml": "3.13.1",
     "tar": "4.4.18",
