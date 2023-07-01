@@ -1495,7 +1495,7 @@ bitcoinjs-message@^2.1.0:
   optionalDependencies:
     secp256k1 "^3.5.2"
 
-"blake2b-wasm@https://github.com/BitGo/blake2b-wasm#193cdb71656c1a6c7f89b05d0327bb9b758d071b", "blake2b-wasm@https://github.com/michaeltout/blake2b-wasm":
+"blake2b-wasm@git+https://github.com/michaeltout/blake2b-wasm.git", "blake2b-wasm@https://github.com/BitGo/blake2b-wasm#193cdb71656c1a6c7f89b05d0327bb9b758d071b", "blake2b-wasm@https://github.com/michaeltout/blake2b-wasm":
   version "2.0.0"
   resolved "https://github.com/michaeltout/blake2b-wasm#a16070b30bb8d8aee670f0c69b642913eca79998"
   dependencies:
@@ -7729,11 +7729,12 @@ verror@^1.10.0:
 
 "verus_bridgekeeper@git+https://github.com/VerusCoin/verusbridgekeeper.git":
   version "1.0.6"
-  resolved "git+https://github.com/VerusCoin/verusbridgekeeper.git#e2666be136160e343b562f726e2e0920c6e30ccc"
+  resolved "git+https://github.com/VerusCoin/verusbridgekeeper.git#0a4cfe56451659c8efe969b316324cb3ec2fcac9"
   dependencies:
     axios "0.25.0"
     base58check "^2.0.0"
     bitgo-utxo-lib "git+https://github.com/VerusCoin/bitgo-utxo-lib.git"
+    blake2b-wasm "git+https://github.com/michaeltout/blake2b-wasm.git"
     ethers "5.1.0"
     ini "2.0.0"
     long "5.2.0"
