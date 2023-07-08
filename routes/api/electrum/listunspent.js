@@ -96,10 +96,6 @@ module.exports = (api) => {
                       return new Promise((resolve, reject) => {
                         api.getTransaction(_utxoItem.tx_hash, network, ecl)
                         .then((_rawtxJSON) => {
-                          api.log('electrum gettransaction ==>', 'spv.listunspent');
-                          api.log(`${index} | ${(_rawtxJSON.length - 1)}`, 'spv.listunspent');
-                          api.log(_rawtxJSON, 'spv.listunspent');
-
                           // decode tx
                           const _network = api.getNetworkData(network);
                           let decodedTx;
@@ -135,8 +131,7 @@ module.exports = (api) => {
                                 interest = api.kmdCalcInterest(
                                   decodedTx.format.locktime,
                                   _utxoItem.value,
-                                  _utxoItem.height,
-                                  true
+                                  _utxoItem.height
                                 );
                               }
 
@@ -255,10 +250,8 @@ module.exports = (api) => {
                     }))
                     .then(promiseResult => {
                       if (!_atLeastOneDecodeTxFailed) {
-                        api.log(promiseResult, 'spv.listunspent');
                         resolve(promiseResult);
                       } else {
-                        api.log('listunspent error, cant decode tx(s)', 'spv.listunspent');
                         resolve('decode error');
                       }
                     });
@@ -303,8 +296,6 @@ module.exports = (api) => {
           req.query.verify
         )
         .then((listunspent) => {
-          api.log('electrum listunspent ==>', 'spv.listunspent');
-
           const retObj = {
             msg: 'success',
             result: listunspent,
@@ -315,8 +306,6 @@ module.exports = (api) => {
       } else {
         api.electrum.listunspent(ecl, req.query.address, network)
         .then((listunspent) => {
-          api.log('electrum listunspent ==>', 'spv.listunspent');
-
           const retObj = {
             msg: 'success',
             result: listunspent,
