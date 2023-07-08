@@ -24,8 +24,6 @@ module.exports = (api) => {
           reject(e)
         }
       } else {
-        api.log('btcfees, use cache', 'spv.btcFees');
-  
         resolve(btcFees)
       }
     });

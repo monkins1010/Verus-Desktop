@@ -17,8 +17,7 @@ module.exports = (api) => {
         api.electrumCache.pendingTx &&
         api.electrumCache.pendingTx[network] &&
         api.electrumCache.pendingTx[network][txid]) {
-      api.log(`pending txs cache remove ${network} txid ${txid}`, 'spv.cache.pending');
-      delete api.electrumCache.pendingTx[network][txid];
+        delete api.electrumCache.pendingTx[network][txid];
 
       if (!Object.keys(api.electrumCache.pendingTx[network]).length) {
         delete api.electrumCache.pendingTx[network];
@@ -40,14 +39,8 @@ module.exports = (api) => {
           pub: options.pub,
           rawtx: options.rawtx,
         };
-        api.log(`pending txs cache add ${network} txid ${txid} pub ${options.pub}`, 'spv.cache.pending');
-      } else {
-        api.log(`pending txs cache ${network} txid ${txid} already exists`, 'spv.cache.pending');
-      }
+      } 
     }
-
-    api.log('pending txs cache', 'spv.cache.pending');
-    api.log(api.electrumCache.pendingTx, 'spv.cache.pending');
   };
 
   api.findPendingTxByAddress = (network, pub) => {
@@ -89,17 +82,13 @@ module.exports = (api) => {
     if (fs.existsSync(`${api.paths.agamaDir}/spv-cache.json`)) {
       const localCache = fs.readFileSync(`${api.paths.agamaDir}/spv-cache.json`, 'utf8');
 
-      api.log('local spv cache loaded from local file', 'spv.cache');
-
       try {
         api.electrumCache = JSON.parse(localCache);
       } catch (e) {
-        api.log('local spv cache file is damaged, create new', 'spv.cache');
         api.saveLocalSPVCache();
         api.electrumCache = {};
       }
     } else {
-      api.log('local spv cache file is not found, create new', 'spv.cache');
       api.saveLocalSPVCache();
       api.electrumCache = {};
     }
@@ -117,7 +106,6 @@ module.exports = (api) => {
             fsnode.chmodSync(spvCacheFileName, '0666');
 
             setTimeout(() => {
-              api.log(result, 'spv.cache');
               resolve(result);
             }, 1000);
           });
@@ -130,13 +118,9 @@ module.exports = (api) => {
             const err = fs.writeFileSync(spvCacheFileName,
                         JSON.stringify(api.electrumCache), 'utf8');
 
-            if (err)
-              return api.log(err, 'spv.cache');
-
+            if (err) return null;
             fsnode.chmodSync(spvCacheFileName, '0666');
             setTimeout(() => {
-              api.log(result, 'spv.cache');
-              api.log(`spv-cache.json file is created successfully at: ${api.paths.agamaDir}`, 'spv.cache');
               resolve(result);
             }, 2000);
           });
@@ -163,15 +147,11 @@ module.exports = (api) => {
       const _pendingTxFromCache = api.findPendingTxRawById(network.toUpperCase(), txid);
       
       if (_pendingTxFromCache) {
-        api.log(`${network} ${txid} get from pending txs cache`, 'spv.cache.transaction.pending');
         resolve(_pendingTxFromCache);
       } else {
-        api.log(`${network.toUpperCase()} dpow confs spv: ${api.dpowCoins.indexOf(network.toUpperCase()) > -1 ? true : false}`, 'spv.dpow.confs');
-        
         if (api.electrum.coinData[network.toLowerCase()].nspv) {
           if (!api.electrumCache[network].tx[txid]) {
             const nspvWrapper = api.nspvWrapper(network.toLowerCase());
-            api.log(`nspv raw input tx ${txid}`, 'spv.cache');
 
             nspvWrapper.blockchainTransactionGet(txid, true)
             .then((nspvGetTx) => {
@@ -180,12 +160,10 @@ module.exports = (api) => {
                 api.electrumCache[network].tx[txid] = nspvGetTx.hex;
                 resolve(api.electrumCache[network].tx[txid]);
               } else {
-                api.log(`nspv unable to get raw input tx ${txid}`, 'spv.cache');
                 resolve();
               }
             });
           } else {
-            api.log(`electrum cached raw input tx ${txid}`, 'spv.cache');
             resolve(api.electrumCache[network].tx[txid]);
           }
         } else {        
@@ -193,11 +171,6 @@ module.exports = (api) => {
               !api.electrumCache[network].verboseTx[txid] ||
               (api.electrumCache[network].verboseTx[txid] && api.electrumCache[network].verboseTx[txid].hasOwnProperty('confirmations') && api.electrumCache[network].verboseTx[txid].hasOwnProperty('rawconfirmations') && api.electrumCache[network].verboseTx[txid].confirmations < 2) ||
               (!api.electrumCache[network].verboseTx[txid].hasOwnProperty('confirmations') || !api.electrumCache[network].verboseTx[txid].hasOwnProperty('rawconfirmations'))) {
-            api.log(`electrum raw input tx ${txid}`, 'spv.cache');
-
-            if (api.dpowCoins.indexOf(network.toUpperCase()) > -1) {
-              api.log(`${network.toUpperCase()} request dpow data update`, 'spv.dpow.confs');
-            }
             
             ecl.blockchainTransactionGet(txid, api.dpowCoins.indexOf(network.toUpperCase()) > -1 ? true : false)
             .then((_rawtxJSON) => {
@@ -211,7 +184,6 @@ module.exports = (api) => {
               resolve(api.electrumCache[network].tx[txid]);
             });
           } else {
-            api.log(`electrum cached raw input tx ${txid}`, 'spv.cache');
             resolve(api.electrumCache[network].tx[txid]);
           }
         }
@@ -225,7 +197,6 @@ module.exports = (api) => {
     }
 
     if (api.electrumCache[network].txDecoded[txid]) {
-      api.log(`electrum raw input tx decoded ${txid}`, 'spv.cache');
       return api.electrumCache[network].txDecoded[txid];
     } else {
       if (data) {
@@ -239,7 +210,6 @@ module.exports = (api) => {
   api.getBlockHeader = (height, network, ecl) => {
     return new Promise((resolve, reject) => {
       if (height === 'pending') {
-        api.log(`electrum raw block ${height} use current time`, 'spv.cache.pending');
         resolve({
           timestamp: Math.floor(Date.now() / 1000),
         });
@@ -255,8 +225,6 @@ module.exports = (api) => {
           !api.electrumCache[network].blockHeader[height] ||
           !Object.keys(api.electrumCache[network].blockHeader[height]).length
         ) {
-          api.log(`electrum raw block ${height}`, "spv.cache");
-
           ecl.blockchainBlockGetHeader(height).then((_rawtxJSON) => {
             if (typeof _rawtxJSON === "string") {
               _rawtxJSON = parseBlock(_rawtxJSON, btcnetworks[network] || btcnetworks.kmd);
@@ -266,7 +234,6 @@ module.exports = (api) => {
               }
             }
             api.electrumCache[network].blockHeader[height] = _rawtxJSON;
-            // api.log(api.electrumCache[network].blockHeader[height], 'spv.cache');
             resolve(_rawtxJSON);
           });
         } else {
