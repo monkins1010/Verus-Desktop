@@ -12,7 +12,7 @@ module.exports = (api) => {
       if (setupConf !== true) {
         reject(setupConf);
       } else {
-        server.start().then((result) => {
+        server.start({ ticker: chainTicker }).then((result) => {
           if (result === true) resolve(result);
           else reject(result);
         });
