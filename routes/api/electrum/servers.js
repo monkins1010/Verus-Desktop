@@ -65,8 +65,6 @@ module.exports = (api) => {
     if (fs.existsSync(`${api.paths.agamaDir}/electrumServers.json`)) {
       const localElectrumServersList = fs.readFileSync(`${api.paths.agamaDir}/electrumServers.json`, 'utf8');
 
-      api.log('electrum servers list set from local file', 'spv.serverList');
-
       try {
         api.electrumServers = JSON.parse(localElectrumServersList);
         api.mergeLocalKvElectrumServers();
@@ -74,8 +72,6 @@ module.exports = (api) => {
         api.log(e, 'spv.serverList');
       }
     } else {
-      api.log('local electrum servers list file is not found!', 'spv.serverList');
-
       api.saveElectrumServersList();
     }
   };
@@ -113,8 +109,6 @@ module.exports = (api) => {
 
             fsnode.chmodSync(electrumServersListFileName, '0666');
             setTimeout(() => {
-              api.log(result, 'spv.serverList');
-              api.log(`electrumServers.json file is created successfully at: ${api.paths.agamaDir}`, 'spv.serverList');
               resolve(result);
             }, 2000);
           });
@@ -155,8 +149,6 @@ module.exports = (api) => {
 
             fsnode.chmodSync(kvElectrumServersListFileName, '0666');
             setTimeout(() => {
-              api.log(result, 'spv.serverList');
-              api.log(`kvElectrumServersCache.json file is created successfully at: ${api.paths.agamaDir}`, 'spv.serverList');
               resolve(result);
             }, 2000);
           });

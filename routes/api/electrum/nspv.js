@@ -60,7 +60,6 @@ module.exports = (api) => {
 
         request(options, (error, response, body) => {
           if (body) {
-            api.log(body, 'spv.nspv.req');
             // TODO: proper error handling in ecl calls
             try {
               if (JSON) resolve(JSON.parse(body));
@@ -126,8 +125,6 @@ module.exports = (api) => {
               process: nspvProcess,
               pid: nspvProcess.pid,
             };
-
-            api.log(`${coin.toUpperCase()} NSPV daemon PID ${nspvProcess.pid} (restart)`, 'spv.coin');
           }
         }, 5000);
       }
@@ -142,7 +139,6 @@ module.exports = (api) => {
         if (api.electrum.coinData[key] &&
             api.electrum.coinData[key].nspv &&
             api.nspvProcesses[key].pid) {
-          api.log(`NSPV daemon ${key.toUpperCase()} PID ${api.nspvProcesses[key].pid} is stopped`, 'spv.nspv.coin');
           for (let i = 0; i < nspvCheckReadyInterval[key].length; i++) {
             clearInterval(nspvCheckReadyInterval[key][i]);
           }
@@ -156,7 +152,6 @@ module.exports = (api) => {
       if (api.electrum.coinData[coin] &&
           api.electrum.coinData[coin].nspv &&
           api.nspvProcesses[coin].pid) {
-        api.log(`NSPV daemon ${coin.toUpperCase()} PID ${api.nspvProcesses[coin].pid} is stopped`, 'spv.nspv.coin');
 
         for (let i = 0; i < nspvCheckReadyInterval[coin].length; i++) {
           clearInterval(nspvCheckReadyInterval[coin][i]);
@@ -276,7 +271,6 @@ module.exports = (api) => {
                   nspvGetTx.hasOwnProperty('hex')) {
                 resolve(nspvGetTx.hex);
               } else {
-                api.log(`nspv unable to get raw input tx ${__txid}`, 'spv.cache');
                 resolve('unable to get raw transaction');
               }
             }
@@ -300,7 +294,6 @@ module.exports = (api) => {
                   nspvBroadcast.expected === nspvBroadcast.broadcast) {
                 resolve(nspvBroadcast.broadcast);
               } else {
-                api.log(`nspv unable to push transaction ${__rawtx}`, 'spv.cache');
                 resolve('unable to push raw transaction');
               }
             }

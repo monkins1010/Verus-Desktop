@@ -54,13 +54,7 @@ module.exports = (api) => {
     };
 
     // wait for spv connection to be established
-    const ecl = await api.ecl(coin);
-
-    if (randomServer) {
-      api.log(`random ${coin} electrum server ${randomServer.ip}:${randomServer.port}`, 'spv.coin');
-    } else {
-      api.log(`${coin} doesnt have any backup electrum servers`, 'spv.coin');
-    }
+    await api.ecl(coin);
 
     if (Object.keys(api.electrumKeys).length > 0) {
       const _keys = api.wifToWif(
@@ -105,14 +99,11 @@ module.exports = (api) => {
     for (let key in api.electrumJSNetworks) {
       if (!api.electrumServers[key] ||
           (api.electrumServers[key] && !api.electrumServers[key].serverList)) {
-        //api.log(`disable ${key}, coin config check not passed`, 'spv.coin');
         delete api.electrumServers[key];
       } else {
         _totalCoins++;
       }
     }
-
-    api.log(`total supported spv coins ${_totalCoins}`, 'spv.coin');
   };
 
   return api;

@@ -15,17 +15,15 @@ module.exports = (api) => {
         try {
           const res = await requestJson(
             "GET",
-            "https://bitcoinfees.earn.com/api/v1/fees/recommended"
+            "https://www.atomicexplorer.com/api/btc/fees"
           );
 
-          const { hourFee, halfHourFee, fastestFee } = res
+          const { hourFee, halfHourFee, fastestFee } = res.result.recommended;
           resolve({low: hourFee, mid: halfHourFee, max: fastestFee});
         } catch(e) {
           reject(e)
         }
       } else {
-        api.log('btcfees, use cache', 'spv.btcFees');
-  
         resolve(btcFees)
       }
     });

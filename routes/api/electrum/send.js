@@ -58,8 +58,6 @@ module.exports = (api) => {
   };
 
   api.electrum.conditionalListunspent = (grainedControlUtxos, ecl, address, network, full, verify) => {
-    api.log(`verify ${verify}`, 'spv.listunspent');
-
     return new Promise((resolve, reject) => {
       if (grainedControlUtxos) {
         resolve(grainedControlUtxos);
@@ -631,7 +629,7 @@ module.exports = (api) => {
 
             const retObj = {
               msg: "success",
-              result: { ...preflightRes, broadcastRes }
+              result: { ...preflightRes, txid: broadcastRes }
             };
 
             res.send(JSON.stringify(retObj));

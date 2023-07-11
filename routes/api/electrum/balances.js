@@ -1,8 +1,6 @@
 const { checkTimestamp } = require('agama-wallet-lib/src/time');
 const { pubToElectrumScriptHashHex } = require('agama-wallet-lib/src/keys');
 const btcnetworks = require('agama-wallet-lib/src/bitcoinjs-networks');
-const { toSats } = require('agama-wallet-lib/src/utils');
-const kmdCalcInterest = require('agama-wallet-lib/src/komodo-interest');
 const UTXO_1MONTH_THRESHOLD_SECONDS = 2592000;
 
 module.exports = (api) => {
@@ -64,8 +62,6 @@ module.exports = (api) => {
         let ecl;
         let _address = address;
 
-        api.log("electrum getbalance =>", "spv.getbalance");
-
         ecl = await api.ecl(network);
         _address =
           ecl.protocolVersion && ecl.protocolVersion === "1.4"
@@ -89,22 +85,12 @@ module.exports = (api) => {
                       let utxoIssues = false;
 
                       for (let i = 0; i < utxoList.length; i++) {
-                        api.log(
-                          `utxo ${utxoList[i].tx_hash} sats ${utxoList[i].value} value ${
-                            Number(utxoList[i].value) * 0.00000001
-                          }`,
-                          "spv.getbalance"
-                        );
-
                         if (Number(utxoList[i].value) * 0.00000001 >= 10) {
                           _utxo.push(utxoList[i]);
                         } else {
                           utxoIssues = true;
                         }
                       }
-
-                      api.log("filtered utxo list =>", "spv.getbalance");
-                      api.log(_utxo, "spv.getbalance");
 
                       if (_utxo && _utxo.length) {
                         let interestTotal = 0;
@@ -132,12 +118,6 @@ module.exports = (api) => {
                                 api
                                   .getTransaction(_utxoItem.tx_hash, network, ecl)
                                   .then((_rawtxJSON) => {
-                                    api.log("electrum gettransaction ==>", "spv.getbalance");
-                                    api.log(
-                                      `${index} | ${_rawtxJSON.length - 1}`,
-                                      "spv.getbalance"
-                                    );
-                                    api.log(_rawtxJSON, "spv.getbalance");
 
                                     // decode tx
                                     const _network = api.getNetworkData(network);
@@ -166,11 +146,10 @@ module.exports = (api) => {
                                       decodedTx.format &&
                                       decodedTx.format.locktime > 0
                                     ) {
-                                      interestTotal += kmdCalcInterest(
+                                      interestTotal += api.kmdCalcInterest(
                                         decodedTx.format.locktime,
                                         _utxoItem.value,
-                                        _utxoItem.height,
-                                        true
+                                        _utxoItem.height
                                       );
 
                                       const _locktimeSec = checkTimestamp(
@@ -191,9 +170,6 @@ module.exports = (api) => {
                                         "interest"
                                       );
                                     }
-
-                                    api.log("decoded tx =>", "spv.getbalance");
-                                    api.log(decodedTx, "spv.getbalance");
 
                                     resolve(true);
                                   });
@@ -228,9 +204,6 @@ module.exports = (api) => {
                   })
                   .catch((e) => reject(e));
               } else {
-                api.log("electrum getbalance ==>", "spv.getbalance");
-                api.log(json, "spv.getbalance");
-
                 resolve({
                   confirmed: Number((0.00000001 * json.confirmed).toFixed(8)),
                   unconfirmed: Number((0.00000001 * json.unconfirmed).toFixed(8)),

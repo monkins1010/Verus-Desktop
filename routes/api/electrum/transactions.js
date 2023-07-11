@@ -50,14 +50,10 @@ module.exports = (api) => {
           walletId = ecl.protocolVersion && ecl.protocolVersion === '1.4' ? pubToElectrumScriptHashHex(api.electrumKeys[coinLc].pub, btcnetworks[network.toLowerCase()] || btcnetworks.kmd) : address;
         }
         
-        api.log('electrum get_transactions ==>', 'spv.get_transactions');
-        
         if (!config.full ||
             ecl.insight) {
           ecl.blockchainAddressGetHistory(walletId)
           .then((json) => {
-            api.log(json, 'spv.get_transactions');
-
             json = api.sortTransactions(json, 'timestamp');
 
             const retObj = {
@@ -99,7 +95,6 @@ module.exports = (api) => {
 
                   if (config.txid) {
                     if (_flatTxHistoryFull[config.txid]) {
-                      api.log(`found txid match ${_flatTxHistoryFull[config.txid].tx_hash}`, 'spv.transactions.txid');
                       json = [_flatTxHistoryFull[config.txid]];
                     } else {
                       json = json.length > MAX_TX ? json.slice(0, MAX_TX) : json;
@@ -110,11 +105,9 @@ module.exports = (api) => {
 
                   if (_pendingTxs &&
                       _pendingTxs.length) {
-                    api.log(`found ${_pendingTxs.length} pending txs in cache`, 'spv.transactions.pending.cache');
 
                     for (let i = 0; i < _pendingTxs.length; i++) {
                       if (_flatTxHistory.indexOf(_pendingTxs[i].txid) > -1) {
-                        api.log(`found ${_pendingTxs[i].txid} pending txs in cache for removal at pos ${_flatTxHistory.indexOf(_pendingTxs[i].txid)}`, 'spv.transactions.pending.cache');
 
                         api.updatePendingTxCache(
                           network,
@@ -124,7 +117,6 @@ module.exports = (api) => {
                           }
                         );
                       } else {
-                        api.log(`push ${_pendingTxs[i].txid} from pending txs in cache to transactions history`, 'spv.transactions.pending.cache');
                         
                         json.unshift(api.electrum.coinData[network.toLowerCase()].nspv ? {
                           height: 'pending',
@@ -138,7 +130,6 @@ module.exports = (api) => {
                     }
                   }
                   
-                  api.log(json.length, 'spv.get_transactions');
                   let index = 0;
 
                   // callback hell, use await?
@@ -178,7 +169,6 @@ module.exports = (api) => {
                           }
 
                           callback();
-                          api.log(`tx history main loop ${json.length} | ${index}`, 'spv.listtransactions');
                         } else {
                           api.getTransaction(
                             transaction.tx_hash,
@@ -187,10 +177,6 @@ module.exports = (api) => {
                           )
                           .then((_rawtxJSON) => {
                             if (transaction.height === 'pending') transaction.height = currentHeight;
-                            
-                            api.log('electrum gettransaction ==>', 'spv.get_transactions');
-                            api.log((index + ' | ' + (_rawtxJSON.length - 1)), 'spv.get_transactions');
-                            // api.log(_rawtxJSON, 'spv.get_transactions');
 
                             // decode tx
                             const _network = api.getNetworkData(network);
@@ -216,11 +202,6 @@ module.exports = (api) => {
 
                             let txInputs = [];
                             let opreturn = false;
-
-                            api.log(`decodedtx network ${network}`, 'spv.get_transactions');
-
-                            api.log('decodedtx =>', 'spv.get_transactions');
-                            // api.log(decodedTx.outputs, 'spv.get_transactions');
 
                             let index2 = 0;
 
@@ -252,7 +233,6 @@ module.exports = (api) => {
 
                                   if (index2 === decodedTx.inputs.length ||
                                       index2 === api.appConfig.general.electrum.maxVinParseLimit) {
-                                    api.log(`tx history decode inputs ${decodedTx.inputs.length} | ${index2} => main callback`, 'spv.get_transactions');
                                     const _parsedTx = {
                                       network: decodedTx.network,
                                       format: decodedTx.format,
@@ -400,7 +380,6 @@ module.exports = (api) => {
                                     }
 
                                     callback();
-                                    api.log(`tx history main loop ${json.length} | ${index}`, 'spv.get_transactions');
                                   } else {
                                     callback2();
                                   }
@@ -420,7 +399,6 @@ module.exports = (api) => {
                                     );
 
                                     if (decodedVinVout) {
-                                      api.log(decodedVinVout.outputs[_decodedInput.n], 'spv.get_transactions');
                                       txInputs.push(decodedVinVout.outputs[_decodedInput.n]);
                                     }
                                     checkLoop();
@@ -552,12 +530,8 @@ module.exports = (api) => {
         ecl = await api.ecl(network);
       }
 
-      api.log('electrum gettransaction =>', 'spv.gettransaction');
-
       ecl.blockchainTransactionGet(req.query.txid)
       .then((json) => {
-        api.log(json, 'spv.gettransaction');
-
         const retObj = {
           msg: 'success',
           result: json,

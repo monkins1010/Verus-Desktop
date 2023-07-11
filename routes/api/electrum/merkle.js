@@ -11,11 +11,6 @@ module.exports = (api) => {
     let hash = txid;
     let serialized;
 
-    api.log(`getMerkleRoot txid ${txid}`, 'spv.merkle');
-    api.log(`getMerkleRoot pos ${pos}`, 'spv.merkle');
-    api.log('getMerkleRoot proof', 'spv.merkle');
-    api.log(`getMerkleRoot ${proof}`, 'spv.merkle');
-
     for (i = 0; i < proof.length; i++) {
       const _hashBuff = new Buffer(hash, 'hex');
       const _proofBuff = new Buffer(proof[i], 'hex');
@@ -53,24 +48,18 @@ module.exports = (api) => {
 
           let ecl = await api.ecl(network);
 
-          api.log(`main server: ${mainServer}`, 'spv.merkle');
-          api.log(`verification server: ${randomServer}`, 'spv.merkle');
-
           ecl.blockchainTransactionGetMerkle(txid, height)
           .then((merkleData) => {
             async function __verifyMerkle() {
               if (merkleData &&
                   merkleData.merkle &&
                   merkleData.pos) {
-                api.log('electrum getmerkle =>', 'spv.merkle');
-                api.log(merkleData, 'spv.merkle');
 
                 const _res = api.getMerkleRoot(
                   txid,
                   merkleData.merkle,
                   merkleData.pos
                 );
-                api.log(_res, 'spv.merkle');
 
                 ecl = await api.ecl(network, {
                   ip: _randomServer[0],
@@ -85,9 +74,6 @@ module.exports = (api) => {
                   } else {
                     if (blockInfo &&
                         blockInfo.merkle_root) {
-                      api.log('blockinfo =>', 'spv.merkle');
-                      api.log(blockInfo, 'spv.merkle');
-                      api.log(blockInfo.merkle_root, 'spv.merkle');
 
                       if (blockInfo &&
                           blockInfo.merkle_root) {
@@ -128,10 +114,6 @@ module.exports = (api) => {
         proto: __server[2],
       };
     }
-
-    api.log('verifyMerkleByCoin', 'spv.merkle');
-    api.log(_server, 'spv.merkle');
-    api.log(_serverList, 'spv.merkle');
 
     return new Promise((resolve, reject) => {
       if (_serverList !== 'none') {

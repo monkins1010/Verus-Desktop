@@ -7716,7 +7716,7 @@ verror@^1.10.0:
 
 "verus-typescript-primitives@git+https://github.com/VerusCoin/verus-typescript-primitives.git":
   version "1.0.0"
-  resolved "git+https://github.com/VerusCoin/verus-typescript-primitives.git#8eeb27571b7d695a1a53e1062d424744599e6ec8"
+  resolved "git+https://github.com/VerusCoin/verus-typescript-primitives.git#c76a26e2ffedb2dc27fb6deeef3f8942e8a65244"
   dependencies:
     base64url "3.0.1"
     bn.js "5.2.1"
@@ -7729,7 +7729,7 @@ verror@^1.10.0:
 
 "verus_bridgekeeper@git+https://github.com/VerusCoin/verusbridgekeeper.git":
   version "1.0.6"
-  resolved "git+https://github.com/VerusCoin/verusbridgekeeper.git#9099595a639f7e7eba79b013c750811a307928fe"
+  resolved "git+https://github.com/VerusCoin/verusbridgekeeper.git#2ff43b4e9ada824c9c683814e6bea9e42966658f"
   dependencies:
     axios "0.25.0"
     base58check "^2.0.0"

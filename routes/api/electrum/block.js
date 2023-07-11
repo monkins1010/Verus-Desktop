@@ -46,9 +46,6 @@ module.exports = (api) => {
         const ecl = await api.ecl(network);
 
         ecl.blockchainHeadersSubscribe().then((json) => {
-          api.log("electrum currentblock (electrum >= v1.1) ==>", "spv.currentblock");
-          api.log(json, "spv.currentblock");
-
           if (json && json.hasOwnProperty("block_height")) {
             resolve(json.block_height);
           } else if (json && json.hasOwnProperty("height")) {
