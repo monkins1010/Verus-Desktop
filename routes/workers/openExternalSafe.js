@@ -135,6 +135,7 @@ const allowedOrigins = [
   '35.204.174.237:3001/insight/tx/',
   'etherscan.io/tx/',
   'ropsten.etherscan.io/tx/',
+  'www.infura.io'
 ]
 
 function generateOpenExternalSafe(shell, url) {
