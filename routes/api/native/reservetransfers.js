@@ -32,10 +32,12 @@ module.exports = (api) => {
           let tx = null;
 
           try {
-            tx = await api.native.callDaemon(chainTicker, "getrawtransaction", [
-              z_operation.result.txid,
-              1,
-            ]);
+            if (z_operation.result.txid) {
+              tx = await api.native.callDaemon(chainTicker, "getrawtransaction", [
+                z_operation.result.txid,
+                1,
+              ]);
+            }
           } catch (e) {}
 
           transfers.push({
