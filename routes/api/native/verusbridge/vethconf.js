@@ -106,7 +106,7 @@ module.exports = (api) => {
       api.log("(veth.conf) file found at: " + confPath, "vethconf");
       for (const [key, value] of Object.entries(Config)) {
         if ((_match = _data.match(`${key}` + "=\\n*(.*)"))) {
-          if (_match[1] != "empty") {
+          if (_match[1] != "empty" || key == "privatekey") {
             Config[key] = _match[1];
           } else {
             api.log("Empty veth.conf file value: " + `${key}:"empty" `, "vethconf");
