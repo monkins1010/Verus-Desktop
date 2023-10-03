@@ -7230,10 +7230,10 @@ swarm-js@^0.1.40:
     tar "^4.0.2"
     xhr-request "^1.0.1"
 
-systeminformation@5.13.5:
-  version "5.13.5"
-  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.13.5.tgz#3675c9a6a26537d08ffb78d0c4feef0e46b6f2a6"
-  integrity sha512-MrIRQCwXYxfwz1hwRMPuBbFKdt794Nz2EtZnaGlImGd6LmKUscDtO8Nztco9yq5qWZPR7pQWJpxqttur86Ge1w==
+systeminformation@5.21.9:
+  version "5.21.9"
+  resolved "https://registry.yarnpkg.com/systeminformation/-/systeminformation-5.21.9.tgz#59287c2371317d569cc9742f8a7df05e65d21449"
+  integrity sha512-7pI4mu9P/2MGDV0T49B52E7IULBGj+kRVk6JSYUj5qfAk7N7C7aNX15fXziqrbgZntc6/jjYzWeb/x41jhg/eA==
 
 tar@4.4.18, tar@^4.0.2, tar@^4.4.10, tar@^4.4.12, tar@^4.4.13, tar@^6.1.11:
   version "4.4.18"
@@ -7729,7 +7729,7 @@ verror@^1.10.0:
 
 "verus_bridgekeeper@git+https://github.com/VerusCoin/verusbridgekeeper.git":
   version "1.0.6"
-  resolved "git+https://github.com/VerusCoin/verusbridgekeeper.git#7645cf8323f74c377f43c031be2c6966f8ab2d96"
+  resolved "git+https://github.com/VerusCoin/verusbridgekeeper.git#9036153e9ca6ad4926ee29e1382f799687f287dc"
   dependencies:
     axios "0.25.0"
     base58check "^2.0.0"
