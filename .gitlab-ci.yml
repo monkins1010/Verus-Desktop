@@ -8,8 +8,8 @@ stages:
 variables:
   DOCKER_DRIVER: overlay2
   DEFAULT_VERUSCOIN_BRANCH: release
-  VERUS_VERSION: 1.1.1-3
-  VERUSCOIN_VERSION: 1.1.1-3
+  VERUS_VERSION: 1.1.1-4
+  VERUSCOIN_VERSION: 1.1.1-4
   KOMODO_VERSION: 0.8.0
   KOMODO_DOWNLOAD_URL: https://github.com/KomodoPlatform/komodo/releases/download
   PIRATE_VERSION: 5.7.5
