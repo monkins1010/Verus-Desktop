@@ -58,7 +58,7 @@ module.exports = (api) => {
   api.writeRpcUser = (confFile) => {
     return new Promise((resolve, reject) => {
       api.log(`creating rpcuser for ${confFile}...`, "native.process");
-      fs.appendFile(confFile, '\nrpcuser=verusdesktop')
+      fs.appendFile(confFile, `\nrpcuser=${generateRpcPassword()}`)
       .then(resolve)
       .catch(e => reject(e))
     })
@@ -72,7 +72,22 @@ module.exports = (api) => {
       .catch(e => reject(e))
     })
   }
-
+  api.writeRpcHost = (confFile) => {
+    return new Promise((resolve, reject) => {
+      api.log(`setting rpchost for ${confFile}...`, "native.process");
+      fs.appendFile(confFile, '\nrpchost=127.0.0.1')
+          .then(resolve)
+          .catch(e => reject(e))
+    })
+  }
+  api.writeRpcAllowIP = (confFile) => {
+    return new Promise((resolve, reject) => {
+      api.log(`setting rpcallowip for ${confFile}...`, "native.process");
+      fs.appendFile(confFile, '\nrpcallowip=127.0.0.1')
+          .then(resolve)
+          .catch(e => reject(e))
+    })
+  }
   api.writeRpcPort = (coin, confFile, fallbackPort) => {
     return new Promise((resolve, reject) => {
       api.log(`creating rpcport for ${confFile}...`, "native.process");
@@ -220,6 +235,8 @@ module.exports = (api) => {
                 api.confFileIndex[coin] = confFile;
                 if (coin === 'VRSCTEST') {
                   return Promise.all([
+                    api.writeRpcHost(confFile),
+                    api.writeRpcAllowIP(confFile),
                     api.writeRpcPort(coin, confFile, fallbackPort),
                     api.writeRpcPassword(confFile),
                     api.writeRpcUser(confFile),
@@ -227,6 +244,8 @@ module.exports = (api) => {
                   ]);
                 } else {
                   return Promise.all([
+                    api.writeRpcHost(confFile),
+                    api.writeRpcAllowIP(confFile),
                     api.writeRpcPort(coin, confFile, fallbackPort),
                     api.writeRpcPassword(confFile),
                     api.writeRpcUser(confFile)
