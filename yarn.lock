@@ -1231,7 +1231,7 @@ async-exit-hook@^2.0.1:
   resolved "https://registry.yarnpkg.com/async-exit-hook/-/async-exit-hook-2.0.1.tgz#8bd8b024b0ec9b1c01cccb9af9db29bd717dfaf3"
   integrity sha512-NW2cX8m1Q7KPA7a5M2ULQeZ2wR5qI5PAbw5L0UOMxdioVk9PMZ0h1TmyZEkPYrCvYjDlFICusOu1dlEKAAeXBw==
 
-async@2.6.4, async@^2.6.0, async@^2.6.1, async@^3.2.3:
+async@2.6.4, async@^2.6.0, async@^2.6.1, async@^3.2.3, async@^3.2.4:
   version "2.6.4"
   resolved "https://registry.yarnpkg.com/async/-/async-2.6.4.tgz#706b7ff6084664cd7eae713f6f965433b5504221"
   integrity sha512-mzo5dfJYwAn29PeiJ0zvwTo04zj8HDJj0Mn8TD7sno7q12prdbnasKJHhkm2c1LgrhlJ0teaea8860oxi51mGA==
@@ -7729,8 +7729,9 @@ verror@^1.10.0:
 
 "verus_bridgekeeper@git+https://github.com/VerusCoin/verusbridgekeeper.git":
   version "1.0.6"
-  resolved "git+https://github.com/VerusCoin/verusbridgekeeper.git#796f5d507a1773ba1eb0210e32c5f43e102252df"
+  resolved "git+https://github.com/VerusCoin/verusbridgekeeper.git#984bfc79868be48d4875ba4b4505a42019d0d844"
   dependencies:
+    async "^3.2.4"
     axios "0.25.0"
     base58check "^2.0.0"
     bitgo-utxo-lib "git+https://github.com/VerusCoin/bitgo-utxo-lib.git"
