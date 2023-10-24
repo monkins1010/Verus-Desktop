@@ -34,11 +34,11 @@ module.exports = (api) => {
   };
 
   api.native.bridgekeeper_status = (chainTicker) => {
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       if (chainTicker !== "VRSC")
         reject(new Error("bridgekeeper not currently supported outside of VRSC"));
 
-      const result = server.status();
+      const result = await server.status();
 
       if (result) resolve(result);
       else reject(result);
